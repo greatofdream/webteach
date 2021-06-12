@@ -181,7 +181,12 @@ y = 42 + " is the answer" // "42 is the answer"
 function square(number) {
   return number * number;
 }
+
 const square = function(number) { return number * number; };
+// 箭头函数,和上面的效果一样，常用在回调函数里
+const square2 = number => { return number*number;}
+// 当箭头函数里只有一个return语句时，可以直接省略return
+const square3 = number=> number*number
 var x = square(4); // x gets the value 16
 ```
 + 流程控制

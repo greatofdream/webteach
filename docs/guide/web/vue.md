@@ -123,6 +123,17 @@ Vue目前已经到Version3了，目前我们仍然以Vue2为例子。
       <i-button @click="show">Click me!</i-button>
       <Modal v-model="visible" title="Welcome">Welcome to ViewUI</Modal>
     </div>
+
+<div id="app3">
+<row>
+    <i-col span="12">
+        <date-picker type="date" placeholder="Select date" style="width: 200px"></date-picker>
+    </i-col>
+    <i-col span="12">
+        <date-picker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></date-picker>
+    </i-col>
+</row>
+</div>
     <script>
       new Vue({
         el: "#app",
@@ -135,6 +146,12 @@ Vue目前已经到Version3了，目前我们仍然以Vue2为例子。
           }
         }
       });
+var Main = {
+        
+    }
+
+var Component = Vue.extend(Main)
+new Component().$mount('#app3')
     </script>
   </body>
 </html>
