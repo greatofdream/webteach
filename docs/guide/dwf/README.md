@@ -23,3 +23,5 @@
 [DWF社区](https://community.nelbds.org.cn/)
 
 [DWF帮助文档](http://ise.thss.tsinghua.edu.cn/confluence/pages/viewpage.action?pageId=43879876)
+
+[DWF帮助文档2021版](http://ise.thss.tsinghua.edu.cn/confluence/pages/viewpage.action?pageId=50314738)
