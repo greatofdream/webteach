@@ -11,6 +11,9 @@ features:
 - title: dwf
   details:
 
-footer: MIT Licensed | Copyright @ 2021-present greatofdream
 ---
+::: slot footer
+MIT Licensed | Copyright © 2021-present [greatofdream](https://github.com/greatofdream)
+京ICP备2020037097号-1
+:::
 # Hello VuePress

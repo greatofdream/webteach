@@ -1,7 +1,9 @@
 module.exports = {
-  title: 'web基础 & DWF',
+  title: '量子数据分析云',
   description: 'DWF',
-  base: '/webdwf/',
+  base: '/',
+  record: "京ICP备2020037097号-1",
+  year: "2023/01/14",
   themeConfig: {
     nav: [
       { text: 'Home', link: '/'},
