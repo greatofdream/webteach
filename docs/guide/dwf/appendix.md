@@ -24,4 +24,13 @@ cd /opt/apache-iotdb-0.13.1-SNAPSHOT-all-bin
 ```
 /tools/import-csv.sh -h localhost -p 6667 -u root -pw  root -f /home/dwfcoder/data/4D_11_withtime.csv -aligned false
 ```
-
+## sql查询
+dwf里面的sql查询分为快速查询和原生查询
++ 快速查询：HQL(Hibernate Query Language)的where后面的语法,
+```sql
+order by obj.createTime
+```
++ 原生查询: SQL的默认语法
+```sql
+select plt_creator as "creator",plt_oid as "oid",plt_owner as "owner",plt_lastmodifytime as "lastModifyTime",plt_lastmodifier as "lastModifier",plt_id as "id",plt_currentprocess as "currentProcess",plt_createtime as "createTime",plt_roomname as "roomName",plt_roomtype as "roomType",plt_installationdate as "installationDate",plt_assetstate as "assetState",plt_operatinghours as "OperatingHours",plt_alarmcount as "alarmCount",plt_numberofseats as "numberofseats",  CONCAT(round(plt_satisfaction*100),'%')  as "satisfaction",plt_locationx as "locationX",plt_locationy as "locationY",plt_roomicon as "roomIcon" from plt_cus_romm2  where 1=1 order by "createTime"
+```

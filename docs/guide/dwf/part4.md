@@ -87,7 +87,7 @@ r = requests.post(host+'/dwf/v1/omf/entities/Data/objects-update',
 ## 调用你的python脚本
 在part2部分，我曾经讲过调用python脚本，此处引用那里的内容
 + 在做这个操作前，确保你的脚本能够在本地运行，这个事情很重要，因为DWF里看不到脚本文件执行的输出结果，你是无法知道它的出错位置
-+ 获得脚本文件路径
++ 获得脚本文件路径: **此处已经有简单的方式，参考附录部分，可以直接在`code-server`界面将你的脚本文件上传**
 + 执行脚本
 此处我们需要创建一个按钮，并添加操作后端脚本
 ```javascript
@@ -97,5 +97,21 @@ var scriptPath = this.omf.getFilePath(oid, 'Script', 'scriptFile');
 //执行脚本,反引号将变量替换成值
 this.sh.execute(`python3 ${scriptPath}`)
 ```
+上面的方式需要创建一个文件的实体类，如果直接上传了脚本文件，可以用下面的方式
++ 前端脚本
+```javascript
+// this.serverDebugger();
+this.callServer().then(res => {
+    console.log(res.data.data);
+    this.msgbox.info(res.data.data);
+})
+```
++ 后端脚本
+```javascript
+var scriptPath = "/home/dwfcoder/src/L1-HelloWorld.py";
+var r = this.sh.execute(`python3 ${scriptPath}`);
+this.res = r;
+```
+其中使用`print`打印字符时需要`dump`
 ## 注意事项
 **务必不要将带有密码的脚本文件以public推到github或者其它方式公开**，会暴露你的dwf登录密码，有安全隐患

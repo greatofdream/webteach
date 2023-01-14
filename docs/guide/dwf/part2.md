@@ -1,7 +1,8 @@
 # 脚本与Echart
 
 ## 前端脚本
-利用前端脚本展示另外一个web页面，首先大家在城市列表页面里加入一个iframe控件
+### 前端脚本展示另外一个web页面
+首先大家在城市列表页面里加入一个iframe控件
 
 在表格的事件里选择单击事件，并创建一个`获取预览`的操作，选择动作为`implement`，选择`前端脚本`将下面代码粘贴进去
 ```javascript
@@ -19,10 +20,23 @@ console.log('url'+webPage.url)
 + link 是实体类的属性，大家可以打开你的实体类查看
 
 [更多操作](http://ise.thss.tsinghua.edu.cn/confluence/pages/viewpage.action?pageId=43880694#id-%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E4%BB%BB%E5%8A%A1%E5%BF%AB%E9%80%9F%E6%8C%87%E5%AF%BC%E6%89%8B%E5%86%8C-%E9%AB%98%E6%89%8B%E5%BF%85%E7%9C%8B-1.1.1.5.1%E8%8E%B7%E5%8F%96%E8%A1%A8%E6%A0%BC%E4%B8%8E%E8%A1%A8%E6%A0%BC%E4%B8%AD%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%EF%BC%88%E8%8E%B7%E5%8F%96%E4%B8%8E%E5%88%B7%E6%96%B0%EF%BC%89)
+### 表格点击事件
+点击表格某一行，使得另外一个多对象控件显示对应的值，例子以DWF内置的仪表盘为例
++ 表格和仪表盘的控件编号分别为`gridId`,`gaugeId`
+```javascript
+grid = this.getAddinById('gridId')
+select = grid.getSelected()[0]
+gauge = this.getAddinById('gaugeId')
+gauge.freshData(`and obj.oid = '${select.oid}'`)
+```
+
+对于其它非DWF内置控件，就没有`freshData(query)`这个函数了，所以需要使用`vue`的`$store`
+
 ## 获取文件路径
 此处使用两个例子，第一个使用`超级控件`结合`iview`实现轮播图，第二个使用`富文本`编辑器显示文本内容，并实现执行脚本
 
 ### 超级控件
+
 在创建表单后，在表单上面有一个小扳手类似的图标处，选择初始化操作
 ```javascript
 var grid = this.getAddinById("Grid3");
@@ -101,6 +115,30 @@ this.omf.edit({"oid": this.obj.oid, "scriptContent": destring}, "Script");
 var spiderFile=this.omf.getFilePath("DC5B8E16D6A24949BE400D996C0E3BAE", "Script", "scriptFile")
 this.sh.execute('python3 `spiderFile`')
 ```
+## 后端脚本: 数据模型扩展
+详情可参考[这里](http://101.6.15.214:8180/confluence/pages/viewpage.action?pageId=50318879)
++ 服务器端提供的一套事件机制
++ 在实体类、关联类对象被创建、删除、修改的前后执行一段指定的脚本
+
+全局关键字
++ `this.obj`:在前处理脚本中表示即将更新到数据库中的JSON对象
++ `this.oldObj`:在更新和删除的后处理脚本中表示完成之前原始的JSON对象
++ `this.className`: 在脚本正在处理及的实体类或者关联类的英文名
+
+在脚本中可以指定一些操作，通过SQL语句完成的删除操作不会触发工单删除后的事件，如
+```
+var curAssetId = this.obj.oid;
+if (curAssetId) {
+    var query = this.em.createNativeQuery("delete from plt_cus_workorder where plt_assetoid = ?");
+    query.setParameter(1, curAssetId);
+    query.executeUpdate();
+}
+```
+其中`?`被下一行`setParameter`指定，`em`为`JPA`的`EntityManager`缩写
+
+***对于实体类，命名规则是：PLT_[前缀]_[类名]，对于关联类，命名规则是：PLT_[前缀]_R_[类名]。其中【前缀】是在类属性界面中指定的，默认为CUS代表自定义。
+
+所以，根据这个规则，工单类在数据库中的对应的表名是：plt_cus_workorder*
 ## 后端脚本读写数据库
 javascript本来就不是设计用来分析数据的，面对极大的数据量缓慢的执行速度并不合适。小规模分析数据有相关的库，但是我并没有深度用过，而且在DWF里需要重新引入对应js的库，我没有做过相关的尝试，也不计划去做这种测试。
 
@@ -431,4 +469,12 @@ this.dwf_axios.post('/omf/entities/Data/objects',param).then(res =>{
 //option && myChart.setOption(option);
 
 
+```
+
+下面的示例代码用于在其它事件中更新Echart中的数据
+```javascript
+var gaugeChart1 = this.getAddinById('GaugeChart1');
+var option=gaugeChart1.mychart.getOption();
+option.series[0].data[0].value=19;
+gaugeChart1.mychart.setOption(option)
 ```
