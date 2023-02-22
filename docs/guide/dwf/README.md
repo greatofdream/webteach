@@ -24,4 +24,4 @@
 
 [DWF帮助文档](http://ise.thss.tsinghua.edu.cn/confluence/pages/viewpage.action?pageId=43879876)
 
-[DWF帮助文档2021版](http://ise.thss.tsinghua.edu.cn/confluence/pages/viewpage.action?pageId=50314738)
+[DWF帮助文档2021版](http://101.6.15.214:8180/confluence/pages/viewpage.action?pageId=64530547)
