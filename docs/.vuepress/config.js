@@ -7,13 +7,17 @@ module.exports = {
   themeConfig: {
     nav: [
       { text: 'Home', link: '/'},
-      { text: 'Guide', 
+      { text: 'DWF', 
         items: [
           { text: 'web基础', link: '/guide/web/'},
           { text: 'DWF', link: '/guide/dwf/'}
         ]
       },
-      { text: 'Example', link: '/examples/'}
+      { text: '前端', 
+	items: [
+	  { text: '面试经验', link: '/front/experience/'},
+	]
+       }
     ],
     sidebar: {
           '/guide/web/': [
@@ -35,6 +39,19 @@ module.exports = {
           '/guide/': [
             ''
           ],
+	  '/front/experience/': [
+	    '',
+	    'Preparation',
+	    'Record'
+	  ],
+	  '/front/HTML/': [
+	    ''
+	  ],
+	  '/front/CSS/': [''],
+	  '/front/Javascript/': [''],
+	  '/front/Node/': [''],
+	  '/front/Vue/': [''],
+	  '/front/SQL/': [''],
           '/': [
             '',
             'about'
