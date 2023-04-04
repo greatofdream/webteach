@@ -1,5 +1,7 @@
 import { defineUserConfig } from 'vuepress'
 import { defaultTheme } from '@vuepress/theme-default'
+import { getDirname, path } from '@vuepress/utils'
+const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 export default defineUserConfig({
   title: '量子数据分析云',
@@ -83,5 +85,8 @@ export default defineUserConfig({
             'about'
           ],
         }
-  })
+  }),
+  alias: {
+    '@theme/HomeFooter.vue': path.resolve(__dirname, './components/HomeFooter.vue'),
+  },
 })
