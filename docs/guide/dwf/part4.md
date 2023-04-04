@@ -44,6 +44,7 @@ print(r.json()['data'])
 ```javascript
 this.sh.execute("pip install jupyter")
 ```
+另外DWF开发课题组提供了`DWFIO.py`文件，将上述的认证过程封装在类里，可以作为模块导入，详细内容和文件下载在[这里](http://101.6.15.214:8180/confluence/pages/viewpage.action?pageId=72695683)
 ## 数据库请求
 **数据库请求的api在API说明里有**，例子如下
 ```python

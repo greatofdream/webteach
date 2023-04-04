@@ -16,8 +16,20 @@ module.exports = {
       { text: '前端', 
 	items: [
 	  { text: '面试经验', link: '/front/experience/'},
+	  { text: 'Node', link: '/front/Node/'},
+	  { text: 'Webpack&Babel', link: '/front/Webpack/' },
 	]
-       }
+      },
+      { text: '后端',
+	items: [
+	  { text: 'Typescript', link: '/backend/Typescript/' },
+	]
+      },
+      {
+        text: '深度学习',
+	link: '/DeepLearning/',
+	items: []
+      }
     ],
     sidebar: {
           '/guide/web/': [
@@ -49,10 +61,21 @@ module.exports = {
 	  ],
 	  '/front/CSS/': [''],
 	  '/front/Javascript/': [''],
-	  '/front/Node/': [''],
+	  '/front/Node/': [
+	    '',
+	    'Async'
+	  ],
+	  '/front/Webpack/': [
+	    '',
+	    'Webpack',
+	    'Babel'
+	  ],
 	  '/front/Vue/': [''],
 	  '/front/SQL/': [''],
-          '/': [
+          '/backend/Typescript/': [
+	    '',
+	  ],
+	   '/': [
             '',
             'about'
           ],
