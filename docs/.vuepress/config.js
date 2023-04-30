@@ -21,8 +21,10 @@ export default defineUserConfig({
       { text: '前端', 
 	children: [
 	  { text: '面试经验', link: '/front/experience/'},
+	  { text: 'Javascript', link: '/front/Javascript/'},
 	  { text: 'Node', link: '/front/Node/'},
 	  { text: 'Webpack&Babel', link: '/front/Webpack/' },
+	  { text: 'Vue', link: '/front/Vue/' },
 	]
       },
       { text: '后端',
@@ -75,7 +77,10 @@ export default defineUserConfig({
 	    'Webpack',
 	    'Babel'
 	  ],
-	  '/front/Vue/': [''],
+	  '/front/Vue/': [
+		  '',
+		  'Nuxt',
+	  ],
 	  '/front/SQL/': [''],
           '/backend/Typescript/': [
 	    '',
