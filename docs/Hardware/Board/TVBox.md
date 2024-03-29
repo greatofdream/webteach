@@ -1,0 +1,153 @@
+# 电视盒子
+写入[Armbian]()，国内大佬搞了一个[Armbian对不同芯片的Armbian镜像列表](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/README.cn.md)
++ [非常详细的编译过程，值得反复阅读](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/documents/README.cn.md)
++ [坑](https://github.com/ophub/amlogic-s9xxx-armbian/issues/491)
++ [镜像地址](https://github.com/ophub/amlogic-s9xxx-armbian/releases),需要选择自己的芯片型号
+
+Armbian烧写命令`armbian-install`
++ [Guide](https://docs.armbian.com/User-Guide_Getting-Started)
++ [FAQ](https://forum.armbian.com/topic/7875-how-nand-sata-install-works/)
+
+## 配置
++ `dtb`文件:Device Tree Blob）文件在Linux启动的早期阶段起作用。具体来说，DTB文件的使用通常发生在以下步骤：
+  + 引导加载器阶段：当系统启动时，引导加载器（如U-Boot、Grub等）会首先执行。引导加载器的任务是加载内核映像和设备树到内存中。引导加载器会读取DTB文件，并将其加载到内存中的特定位置。
+  + 内核启动阶段：引导加载器将控制权交给内核后，内核会开始执行初始化过程。在这个过程中，内核会解析内存中的DTB数据。内核使用这些数据来了解硬件的配置信息，并据此初始化硬件设备和设备驱动。
+## 天猫盒子
+|型号|CPU|内存|主存储器|
+|-|-|-|-|
+|M17|S905x(4核)|1GB|8GB|
+
++ [一些天猫盒子的短接方式](https://www.znds.com/tv-82019-1-1.html)
+### M17
++ M17背面有1个USB接口，网口，HDMI接口，所以需要一个usb拓展坞。M17的电路板上有一个JTAG的四个点，但是需要[焊接](https://www.znds.com/tv-1201420-1-1.html)。
++ 直接接上u盘并不能直接启动
+烧写过程
++ ADB测试无权限
+  + 在原有系统中进入设置，选择开发者模式打开
+  + `adb connect <盒子的IP>`，盒子会弹出确认框，选择确认
+  + `adb shell`进入命令行: 显示`shell@MagicBox_M17`，测试表明权限过低，无法执行`reboot update`,`dd`操作,`fdisk -l`也无任何输出
++ 串口烧写测试：盒子上有4个触点，从左到右分别为VCC,RX,TX,GND，连接USB转串口的线缆到电脑，打开串口终端，上电后不停的按`Enter`，详见后续章节。测试VCC和GND为TTL电平。波特率设置为115200。注意焊接温度要调到350度以上才能让触点处的焊锡融化。
+  + 使用了一个CH340的USB转RS232串口的线缆，估计里面还有一个TTL转RS232的芯片，测试表明VCC和GND之间电平为RS232电平。RS232电平标准为-3V为0，3V为1。直接连接在盒子的串口上打印的均为乱码。 
+  + 需要使用usb转TTL电平的串口芯片，手头上暂时没有单独的CH340，找到了一个WCH549G的芯片替代。输出正常，为root身份。
+```shell
+root@MagicBox_M17:/ # getprop|grep product
+
+[ro.build.product]: [MagicBox_M17]
+[ro.product.board]: [MagicBox_M17]
+[ro.product.brand]: [MBX]
+[ro.product.cpu.abi2]: [armeabi]
+[ro.product.cpu.abi]: [armeabi-v7a]
+[ro.product.cpu.abilist32]: [armeabi-v7a,armeabi]
+[ro.product.cpu.abilist64]: []
+[ro.product.cpu.abilist]: [armeabi-v7a,armeabi]
+[ro.product.device]: [MagicBox_M17]
+[ro.product.firmware]: [00502001]
+[ro.product.locale.language]: [zh]
+[ro.product.locale.region]: [CN]
+[ro.product.manufacturer]: [Tmall]
+[ro.product.model]: [MagicBox_M17]
+[ro.product.name]: [MagicBox_M17]
+[ro.product.otaupdateurl]: [http://10.28.11.53:8080/otaupdate/update]
+[ro.yunos.product.board]: [mango]
+[ro.yunos.product.chip]: [amlogic_m8]
+[ro.yunos.product.device]: [MagicBox_M17]
+[ro.yunos.product.lang]: [CN]
+[ro.yunos.product.model]: [MagicBox]
+[ro.yunos.product.region]: [CN]
+[ro.yunos.product.vendor]: [amlogic]
+root@MagicBox_M17:/ # getprop ro.build.version.release
+
+6.1.0-RS-20200706.2216
+root@MagicBox_M17:/ # cat /proc/cpuinfo
+
+Processor	: ARMv8 Processor rev 4 (v8l)
+processor	: 0
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 4
+
+Hardware	: Amlogic
+Serial		: 210a8200534acc8abe08cfe16352e09b
+```
++ 检查package: M17使用YUNOS，但是还是Android的命令，不过里面没有浏览器，所以可玩性很差
+```shell
+# 列出包
+pm list package
+# 打开设置
+am start -a android.settings.SETTINGS
+```
++ [提取uboot文件](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/documents/README.cn.md#1211-%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9C-u-boot-%E6%96%87%E4%BB%B6)
+  + [参考](https://docs.u-boot.org/en/latest/board/amlogic/khadas-vim.html),由于Amlogic没有提供固件的源码和工具制作bootloader的镜像，[所以需要从厂商的固件中提取`acs.bin`文件](https://github.com/unifreq/u-boot/blob/master/doc/board/amlogic/x96max-plus.rst#image-creation)，然后和uboot.bin一起使用[`amlogic-boot-fip`](https://github.com/LibreELEC/amlogic-boot-fip)工具打包成包含有BL1，BL2,BL3的bootloader。
+  + 导出bootloader`dd if=/dev/block/bootloader of=/data/local/bootloader.bin`
+  + 导出dtb `cat /dev/dtb >/data/local/mybox.dtb`
+  + 导出gpio `cat /sys/kernel/debug/gpio >/data/local/mybox_gpio.txt`
+  + 使用`HxD`检查`bootloader.bin`,`200x`地址后里面均为乱码，应该是被加密过，无法生成新的uboot
++ 使用chain uboot:通过原有uboot引导另外一个uboot，[M16s的英文帖子](https://lists.denx.de/pipermail/u-boot/2022-July/488739.html)与[中文帖子](https://www.bilibili.com/read/cv18005318/)
+  + 断电接电或者`reboot`命令启动盒子，键盘在串口终端输入`Enter`，直至uboot暂停启动，停止在`gxl_p212_v1#`
+  + `printenv`显示`bootcmd=set_usb_boot 4;run storeboot`，对照其它命令，`4`是拒绝usb启动，而使用魔盒上的USB口则需要放弃该指令
+  + [fatload](https://docs.u-boot.org/en/latest/usage/cmd/fatload.html)从FAT格式中读取文件, [usb start]()扫描usb终端
+```shell
+gxl_p212_v1#help set_usb_boot                                                   
+set_usb_boot - set usb boot mode                                                
+                                                                                
+Usage:                                                                          
+set_usb_boot [usb boot mode]/N                                                  
+  support following [usb boot mode]:                                            
+    1: CLEAR_USB_BOOT                                                           
+    2: FORCE_USB_BOOT[default]                                                  
+    3: RUN_COMD_USB_BOOT/recovery                                               
+    4: PANIC_DUMP_USB_BOOT
+
+setenv OLDBOOTCMD "set_usb_boot 4;run storeboot"
+setenv USBBOOTCMD "usb start;if fatload usb 0 0x1000000 u-boot.bin; then go 0x1000000; fi;"
+setenv bootcmd "run USBBOOTCMD; run OLDBOOTCMD; run storeboot"
+saveenv
+sleep 1
+reboot
+```
++ 自定义`M17`的uboot，我已经上传了一份更改过内存大小的uboot，并编译出[`uboot.bin`](https://github.com/greatofdream/u-boot/releases/tag/v1)
++ 配置启动U盘
+  + 使用镜像烧写工具写入[armbian](https://github.com/ophub/amlogic-s9xxx-armbian/releases)
+  + 在第一个fat32分区中复制入`uboot.bin`
++ 启动系统，安装`Desktop`等，安装完会自动重启
+  + 重启后始终无法进入桌面，并且会有一系列服务Failed，而且偶尔出现文件系统是只读状态，[github](https://github.com/ophub/amlogic-s9xxx-armbian/issues/785)上有人报告了类似问题，但并未解决。
+```shell
+apt update
+armbian-software
+# 输入201，可以选择安装Desktop
+```
++ 图形
+  + 按照[此处](https://github.com/ophub/amlogic-s9xxx-armbian/issues/802)写入xorg的conf文件
+  + 安装窗口管理器`xfwm`，直接安装桌面，带有该管理器 `apt install xfce4`
+```shell
+apt install xorg x11-app lshw
+lshw -C display
+```
++ 调整Linux根目录分区大小，由于U盘有较多坏块，直接将后面的坏块全部压缩为另外一个分区，但是没有找到在线压缩分区的办法，所以只能换一块u盘了
++ 安装面板: `apt install docker.io docker-compose`
+  + 创建`docker-compose.yml`
+```shell
+version: '2'
+services:
+  web:
+    image: whyour/qinglong
+    volumes:
+      - "./data:/ql/data"
+    ports:
+      - "5700:5700" # 左边换成宿主机上未被占用的端口（Nginx需要同步更改)
+    environment:
+      QlBaseUrl: '/'
+    restart: unless-stopped
+
+```
+  + 启动docker `docker-compose  up -d`
+  + 通过浏览器访问`<盒子的IP>:5700`
++ 添加定时服务
+  + [掘金签到](https://github.com/leochen-g/ql-juejinhelper)
+  + [京东](https://github.com/shufflewzc/faker3/tree/main?tab=readme-ov-file)
+## N1
++ [N1简明降级&刷机教程](https://post.smzdm.com/p/a99vxp9e/)
++ [N1 Armbian教程](https://blog.csdn.net/ylz_yg/article/details/114977258)
