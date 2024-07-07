@@ -1,7 +1,7 @@
 # Typescript
 虽然将Typescript放在了后端，但它在前端框架(Vue3,React,Angular)中也是至关重要的。
 
-重要的参考仍然是[官方文档](https://www.typescriptlang.org/docs/handbook/intro.html)
+重要的参考仍然是[官方文档](https://www.typescriptlang.org/docs/handbook/intro.html),此外参考了[简明教程](https://ts.xcatliu.com/introduction/index.html)
 # 安装
 全局安装typescript，
 ```
