@@ -1,5 +1,6 @@
-# Stable Diffusion WebUI
-## txt2img
+# 深度学习
+## Stable Diffusion WebUI
+### txt2img
 [colab](https://atlassc.net/2023/02/18/stable-diffusion-webui-colab-guide-for-beginners#:~:text=Stable%20Diffusion%20Web%20UI%20Colab%20%E6%98%AF%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E5%9C%A8%20Google%20Colab,Google%20Colab%20%E4%B8%8A%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2%20Stable%20Diffusion%20Web%20UI%20Colab%E3%80%82)
 [prompt](https://www.tjsky.net/tutorial/488)
 
@@ -56,3 +57,8 @@ nsfw paintings.shetches, (worst quality:2),(low quality:2), (normal quality:2), 
 (duplicate:1.331), (morbid:1.21), (mutilated:1.21), (tranny:1.331),  mutated hands, (poorly drawn hands:1.331), blurry, (bad anatomy:1.21), (bad proportions:1.331), extra limbs, (disfigured:1.331), (more than 2 nipples:1.331),
 (missing arms:1.331), (extra legs:1.331), (fused fingers:1.61), (too many fingers:1.61), (unclear eyes:1.331), bad hands, missing fingers, extra digit, (futa:1.1), bad body, NG_DeepNegative_V1_75T
 ```
+## 气象预测
+### WRF
++ [Weather Research & Forecasting Model (WRF)](https://www.mmm.ucar.edu/models/wrf)
++ [Tutorial](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/Introduction/index.php)
++ [Technical note]()
