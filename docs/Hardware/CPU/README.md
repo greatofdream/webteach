@@ -11,3 +11,4 @@
 |Intel Core i5-5200U @ 2.20GHz|2498|
 |Intel Celeron J1900 @ 1.99GHz|1151|
 
+<my-chart />

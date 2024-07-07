@@ -83,6 +83,9 @@ am start -a android.settings.SETTINGS
   + [参考](https://docs.u-boot.org/en/latest/board/amlogic/khadas-vim.html),由于Amlogic没有提供固件的源码和工具制作bootloader的镜像，[所以需要从厂商的固件中提取`acs.bin`文件](https://github.com/unifreq/u-boot/blob/master/doc/board/amlogic/x96max-plus.rst#image-creation)，然后和uboot.bin一起使用[`amlogic-boot-fip`](https://github.com/LibreELEC/amlogic-boot-fip)工具打包成包含有BL1，BL2,BL3的bootloader。
   + 导出bootloader`dd if=/dev/block/bootloader of=/data/local/bootloader.bin`
   + 导出dtb `cat /dev/dtb >/data/local/mybox.dtb`
+    + 反编译dtb: `dtc -I dtb -O dts -o xxx.dts xxx.dtb`. 如果出现错误`FATAL ERROR: Blob has incorrect magic number`，说明[dtb文件有偏移](https://wiki.postmarketos.org/wiki/Device_Tree_(dtb))
+    + 使用`binwalk`判断offset的位置为`0x800`
+    + `dd if=m17.dtb skip=$((0x800)) iflag=skip_bytes | dtc -I dtb -O dts -o m17.dts`成功导出m17的dts
   + 导出gpio `cat /sys/kernel/debug/gpio >/data/local/mybox_gpio.txt`
   + 使用`HxD`检查`bootloader.bin`,`200x`地址后里面均为乱码，应该是被加密过，无法生成新的uboot
 + 使用chain uboot:通过原有uboot引导另外一个uboot，[M16s的英文帖子](https://lists.denx.de/pipermail/u-boot/2022-July/488739.html)与[中文帖子](https://www.bilibili.com/read/cv18005318/)
@@ -108,7 +111,11 @@ saveenv
 sleep 1
 reboot
 ```
-+ 自定义`M17`的uboot，我已经上传了一份更改过内存大小的uboot，并编译出[`uboot.bin`](https://github.com/greatofdream/u-boot/releases/tag/v1)
++ 自定义`M17`的uboot，我已经上传了一份更改过内存大小的uboot，并编译出[`uboot.bin`](https://github.com/greatofdream/u-boot/releases/tag/v1)，该文件产生大致流程为
+  + `arch/arm/dts/meson-gxl-s905x-p212-M17.dts`, `arch/arm/dts/meson-gxl-s905x-p212-M17.dtsi`, `configs/p212_M17_defconfig`文件根据前文的一个参考博客修改而来，不过dts文件还需要对比确认，目前没有办法找到wifi。
+  + `meson-gxl-s905x.dtsi`中是s905x芯片通用配置
+  + `meson-gxl-s905x-p212-M17.dtsi`引用了`meson-gxl-s905x.dtsi`并定义了外设，首行为`/`代表根节点
+  + `meson-gx.dtsi:          ethmac: ethernet@c9410000 {`定义了网卡
 + 配置启动U盘
   + 使用镜像烧写工具写入[armbian](https://github.com/ophub/amlogic-s9xxx-armbian/releases)
   + 在第一个fat32分区中复制入`uboot.bin`
@@ -126,7 +133,22 @@ armbian-software
 apt install xorg x11-app lshw
 lshw -C display
 ```
-+ 调整Linux根目录分区大小，由于U盘有较多坏块，直接将后面的坏块全部压缩为另外一个分区，但是没有找到在线压缩分区的办法，所以只能换一块u盘了
++ 调整Linux根目录分区大小，由于U盘有较多坏块，直接将后面的坏块全部压缩为另外一个分区，但是没有找到在线压缩分区的办法，所以只能换一块u盘了。对于扩容盘，可以采用扩展分区分方式。
+```shell
+fdisk /dev/sda
+# 打印分区
+p
+# 删除需要扩展的分区，比如/dev/sda2就输入2
+d
+# 创建新分区，会提示指定分区编号，起始位置和终止位置，按照打印分区提供的信息调整填写
+n
+# 重写分区表
+w
+# 退出
+q
+# 调整文件系统大小
+resize2fs /dev/sda2
+```
 + 安装面板: `apt install docker.io docker-compose`
   + 创建`docker-compose.yml`
 ```shell
@@ -145,9 +167,15 @@ services:
 ```
   + 启动docker `docker-compose  up -d`
   + 通过浏览器访问`<盒子的IP>:5700`
-+ 添加定时服务
-  + [掘金签到](https://github.com/leochen-g/ql-juejinhelper)
-  + [京东](https://github.com/shufflewzc/faker3/tree/main?tab=readme-ov-file)
++ 添加定时服务，比如[自动签到](/Tools/Sign.html)
+
++ 添加nes模拟器`apt install fceux`, fceux依赖于[nes-emulator](https://packages.debian.org/bullseye/nes-emulator)
++ 文件错误：由于u盘问题，经常会出现文件错误，apt也会报错
+```shell
+dpkg: unrecoverable fatal error, aborting: files list file for package
+# 移除错误的info
+rm /var/lib/dpkg/info/
+```
 ## N1
 + [N1简明降级&刷机教程](https://post.smzdm.com/p/a99vxp9e/)
 + [N1 Armbian教程](https://blog.csdn.net/ylz_yg/article/details/114977258)
