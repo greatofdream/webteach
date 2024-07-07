@@ -3,6 +3,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 import { getDirname, path } from '@vuepress/utils'
 const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 export default defineUserConfig({
   title: '量子数据分析云',
   description: 'DWF',
@@ -12,7 +13,7 @@ export default defineUserConfig({
   theme: defaultTheme({
     navbar: [
       { text: 'Home', link: '/'},
-      { text: 'DWF', 
+      { text: '低代码', 
         children: [
           { text: 'web基础', link: '/guide/web/'},
           { text: 'DWF', link: '/guide/dwf/'}
@@ -22,9 +23,11 @@ export default defineUserConfig({
 	children: [
 	  { text: '面试经验', link: '/front/experience/'},
 	  { text: 'Javascript', link: '/front/Javascript/'},
+	  { text: 'CSS', link: '/front/CSS/'},
 	  { text: 'Node', link: '/front/Node/'},
-	  { text: 'Webpack&Babel', link: '/front/Webpack/' },
+	  { text: 'Webpack', link: '/front/Webpack/' },
 	  { text: 'Vue', link: '/front/Vue/' },
+	  { text: 'spider', link: '/front/Spider/'},
 	]
       },
       { text: '后端',
@@ -33,10 +36,74 @@ export default defineUserConfig({
 	]
       },
       {
+	text: '桌面',
+	children: [
+	  { text: 'VScode', link: '/Desktop/VSCode/'},
+	]
+      },
+      {
         text: '深度学习',
 	link: '/DeepLearning/',
-	children: []
-      }
+	children: [
+          { text: 'pytorch', link: '/DeepLearning/Torch' },
+	]
+      },
+      {
+        text: '操作系统',
+	children: [
+          { text: '快捷键', link: '/OS/Shortcut/' },
+          { text: 'X11', link: '/OS/X11/'},
+	  { text: 'Linux', link: '/OS/Linux/' },
+	  { text: 'Windows', link: '/OS/Windows/' },
+	],
+      },
+      {
+        text: '硬件',
+	children: [
+	  { text: 'CPU', link: '/Hardware/CPU/' },
+	  { text: 'GPU', link: '/Hardware/GPU/' },
+	  { text: '开发板', link: '/Hardware/Board/'},
+	  { text: '开发软件', link: '/Hardware/Software/' },
+          { text: '屏幕', link: '/Hardware/Panel/' },
+          { text: 'U盘', link: '/Hardware/UDisk/' },
+	],
+      },
+      {
+	text: '软件',
+	children: [
+	  { text: 'Gitea', link: '/Software/gitea' },
+	  { text: 'Vuepress', link: '/Software/vuepress'},
+	  { text: 'Geant4', link: '/Software/Geant4'},
+	  { text: 'ROOT', link: '/Software/ROOT'},
+	  { text: 'Matplotlib', link: '/Software/matplotlib'},
+	],
+      },
+      {
+	text: '编程语言',
+	children: [
+	  { text: 'C语言', link: '/Coding/CLanguage' },
+	],
+      },
+      {
+	text: '安全',
+	children: [
+		{ text: '网络', link: '/Security/Web/' },
+		{ text: '二进制', link: '/Security/Binary/' },
+	]
+      },
+      {
+	text: '理论',
+	link: '/Theory/',
+	children: [
+	  { text: '概述', link: '/Theory/' },
+	  { text: '金融学', link: '/Theory/Finance/' },
+	  { text: '概率论', link: '/Theory/Probability' },
+	]
+      },
+      {
+	text: '工具箱',
+	link: '/Tools/',
+      },
     ],
     sidebar: {
           '/guide/web/': [
@@ -82,16 +149,79 @@ export default defineUserConfig({
 		  'Nuxt',
 	  ],
 	  '/front/SQL/': [''],
+	  '/front/Spider/': [''],
           '/backend/Typescript/': [
 	    '',
 	  ],
+	  '/DeepLearning/': [
+		  '',
+	    'Torch',
+	  ],
+	  '/OS/Shortcut': [''],
+	  '/OS/X11': [''],
+	  '/OS/Linux/': [
+		  '',
+		  'Manjaro',
+		  'Fonts',
+	  ],
+	  '/Security/Web/': [
+		  '',
+		  'PacketCapture',
+		  'VPN',
+	  ],
+	  '/Security/Binary/': [
+		  '',
+	  ],
+	  '/Hardware/CPU': [
+	    '',
+	    'Intel',
+	    'AMD',
+	    'Qualcomm',
+	    'Nvidia',
+	    'RockChip',
+	  ],
+	  '/Hardware/GPU': [
+		  'AMD',
+	  ],
+	  '/Hardware/Board': [
+		'',
+		'WCH',
+		'Redefine',
+		'TVBox',
+		'PortableWifi',
+		'Phone',
+	  ],
+	  '/Hardware/Software': [
+		  '',
+		  'Verilator',
+	  ],
+	  '/Hardware/Panel': [
+		  '',
+		  'Ink',
+	  ],
+	  '/Theory/Finance': [
+		  '',
+		  'CorporateFinance',
+	  ],
+	  '/Tools/': [
+		 '',
+		 'Books',
+		  'Sign',
+		  'DrivingLicense',
+	  ],
 	   '/': [
             '',
-            'about'
           ],
         }
   }),
   alias: {
     '@theme/HomeFooter.vue': path.resolve(__dirname, './components/HomeFooter.vue'),
   },
+  plugins:[
+      registerComponentsPlugin({
+	      components: {
+		      MyChart: path.resolve(__dirname, './components/MyChart.vue'),
+	      },
+      }),
+  ],
 })
