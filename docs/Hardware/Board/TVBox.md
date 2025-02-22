@@ -71,6 +71,8 @@ CPU revision	: 4
 
 Hardware	: Amlogic
 Serial		: 210a8200534acc8abe08cfe16352e09b
+root@MagicBox_M17:/ #ls /sys/class/net/wlan0/device/driver/module -l
+lrwxrwxrwx root     root              2024-07-14 19:42 module -> ../../../../module/8192eu
 ```
 + 检查package: M17使用YUNOS，但是还是Android的命令，不过里面没有浏览器，所以可玩性很差
 ```shell
@@ -128,7 +130,7 @@ armbian-software
 ```
 + 图形
   + 按照[此处](https://github.com/ophub/amlogic-s9xxx-armbian/issues/802)写入xorg的conf文件
-  + 安装窗口管理器`xfwm`，直接安装桌面，带有该管理器 `apt install xfce4`
+  + 安装窗口管理器`xfwm`，直接安装桌面，带有该管理器 `apt install xfce4`, 启动桌面`startx /usr/bin/xfce4-session`
 ```shell
 apt install xorg x11-app lshw
 lshw -C display
@@ -170,7 +172,13 @@ services:
 + 添加定时服务，比如[自动签到](/Tools/Sign.html)
 
 + 添加nes模拟器`apt install fceux`, fceux依赖于[nes-emulator](https://packages.debian.org/bullseye/nes-emulator)
++ 中文字体: `apt install ttf-wqy-zenhei`
++ 浏览器：`apt install firefox-esr`
++ 浏览器音视频解码：`apt install ffmpeg`
 + 文件错误：由于u盘问题，经常会出现文件错误，apt也会报错
++ 安装Realtek 的8192eu的wifi驱动：[这里](https://docs.armbian.com/User-Guide_Advanced-Features/#how-to-build-a-wireless-driver)提到了一个很旧的版本，测试无法通过。~~README中说kernel4.4之后已经引入了很好的rtl8xxxu驱动，建议检查编译内核时是否开启参数`CONFIG_RTL8XXXU_UNTESTED`~~。`8192eu`从kernel6.2中的注释开始出现，但是在说明中说[4.3后就开始支持了](https://wireless.wiki.kernel.org/en/users/drivers/rtl819x)。修改该参数并[重新编译内核支持RTL8xxxu](https://github.com/greatofdream/amlogic-s9xxx-armbian/actions/workflows/compile-kernel.yml)。
+  + 切换kernel：参考[这里](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/README.cn.md)，下载kernel并上传，解压在对应的目录下执行`armbian-update`，如果网络很好，可以从远程更新`armbian-update -r greatofdream/amlogic-s9xxx-armbian`，尝试失败，没有对应的内容
+  + 直接编译对应[模块](https://github.com/clnhub/rtl8192eu-linux.git)
 ```shell
 dpkg: unrecoverable fatal error, aborting: files list file for package
 # 移除错误的info

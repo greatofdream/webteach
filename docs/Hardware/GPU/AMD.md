@@ -3,15 +3,38 @@
 + [架构介绍](https://rocm.docs.amd.com/en/latest/conceptual/gpu-arch.html#gpu-arch-documentation)
   + [RDNA](https://www.amd.com/system/files/documents/rdna-whitepaper.pdf): The all new RadeonTM gaming architecture powering “Navi”
   + 驱动编译使用的[LLVM target](https://llvm.org/docs/AMDGPUUsage.html#amdgpu-amdhsa-memory-model-gfx10-gfx11)
+  + `rocprof`支持[gfx1010](https://rocm.docs.amd.com/projects/rocprofiler/en/docs-6.0.0/rocprofv1.html)
+  + `rocgdb`对[GPU architecture的标识](https://rocm.docs.amd.com/projects/ROCgdb/en/docs-6.0.0/ROCgdb/gdb/doc/gdb/AMD-GPU.html)
+  + `hipcc`中的选项[`--offload-arch=<target>`](https://rocm.docs.amd.com/projects/HIP/en/docs-6.0.0/user_guide/hip_porting_guide.html)，在[github issue](https://github.com/ROCm/ROCm/issues/1714)
++ [RoCM Developer Hub](https://www.amd.com/zh-cn/developer/resources/rocm-hub.html)
++ 书籍：Accelerated Computing with HIP
+
 ||RDNA| LLVM target| Navi|
 |-|-|-|-|
 |RX 5700/xt|1.0|gfx1010|Navi10|
 
++ ROCM要求CPU和主板支持`PCIe™ atomics `,1st generation AMD Zen CPU and Intel™ Haswell 之后支持该操作。E5 2680v4是Haswell之后的Broadwell架构，理论上支持。
 + ROCM对GPU支持列表：[windows](https://rocm.docs.amd.com/en/latest/release/windows_support.html#windows-supported-gpus) [Linux](https://rocm.docs.amd.com/en/latest/release/gpu_os_support.html#linux-supported-gpus)
 + 2023年11月12日，ROCM官网给出的GPU支持列表不包括RDNA1.0架构
-+ [github issue](https://github.com/pytorch/pytorch/issues/106728)提到可以用某个特定版本来支持5700，尚未尝试。[gihub issue](https://github.com/pytorch/pytorch/issues/106728)失败例子。
++ [github issue](https://github.com/pytorch/pytorch/issues/106728), [issue](https://github.com/ROCm/ROCm/issues/2527), [issue]()提到可以用某个特定版本 RoCM5.2 来支持5700xt，尚未尝试。[gihub issue](https://github.com/pytorch/pytorch/issues/106728)失败例子。
+  + `pytorch 1.13.1`设置`export HSA_OVERRIDE_GFX_VERSION=10.3.0`
 + [编译成功例子](https://github.com/xuhuisheng/rocm-build/blob/master/navi10/README_zh_CN.md)
 + [知乎问题](https://www.zhihu.com/question/371965193)
+## 尝试
++ LXC配置`/var/lib/lxc/<lxc name>/config`访问显卡
+```shell
+
+```
++ [这里](https://repo.radeon.com/rocm/apt/)有所有rocm的apt仓库版本，此处选择5.7.3，因为[此处](https://github.com/vladmandic/automatic/commit/96b851eae6e0d9ba964eedabcdc1a3da75b963f0)已经有人验证过该版本
+  + 也可使用[`amdgpu-installer`](https://repo.radeon.com/amdgpu-install/)进行安装
+```shell
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/5.7.3 jammy main" \
+    | sudo tee --append /etc/apt/sources.list.d/rocm.list
+```
++ pytorch 安装，命令[参考](https://pytorch.org/get-started/locally/), 编译的包的位置在`https://download.pytorch.org/whl/nightly/rocmx.x`
+```shell
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
+```
 ## 检查
 Linux无法正常启动，进入就会黑屏
 + 设置VGA显示：在启动时按`ESC`进入GRUB界面，按`E`选择对应的启动项编辑，在`linux`开头行处加入`nomodeset`参数，可以正常启动
