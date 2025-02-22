@@ -32,6 +32,9 @@ Rootcint 是旧的用于产生dict的文件，Rootcling是新的
 //填充需要反射的类
 #endif
 ```
+## load R interpreter
+[reference](https://root.cern/doc/master/classROOT_1_1R_1_1TRInterface.html)
+[root r project](https://oproject.org/pages/ROOT%20R%20Users%20Guide)
 
 ## Error记录
 + class的版本号不对应会导致`CheckByteCount`warning和错误
@@ -55,3 +58,4 @@ Error: cannot open file "typeinfo"  /home/scratch/extlib/root-5.22.00/include/Rt
 # 下面为示例
 $ /usr/local/sklib_gcc8/root_v5.34.38/build_cmake/bin/rootcint -cint -f SKG4_dict.cxx -c  -I/usr/local/sklib_gcc8/root_v5.34.38/build_cmake/cint/cint/include -I/usr/local/sklib_gcc8/root_v5.34.38/build_cmake/cint/cint/stl -I/usr/local/sklib_gcc8/root_v5.34.38/build_cmake/cint/cint/lib /junofs/users/junoprotondecay/SolarNeutrino/SuperK/bonsailightcurve/converter/SKG4RootPmt.hh /junofs/users/junoprotondecay/SolarNeutrino/SuperK/bonsailightcurve/converter/SKG4RootCeren.hh /junofs/users/junoprotondecay/SolarNeutrino/SuperK/bonsailightcurve/converter/LinkDef.h
 ```
++ 问题定位为缺少`/proc`路径
