@@ -86,7 +86,7 @@ export default defineUserConfig({
       {
 	text: '编程语言',
 	children: [
-	  { text: 'C语言', link: '/Coding/CLanguage' },
+	  { text: 'C语言', link: '/Coding/CLanguage/' },
 	],
       },
       {
@@ -102,8 +102,8 @@ export default defineUserConfig({
 	children: [
 	  { text: '概述', link: '/Theory/' },
 	  { text: '金融学', link: '/Theory/Finance/' },
-	  { text: '概率论', link: '/Theory/Probability' },
-	  { text: '核物理', link: '/Theory/RadiationDetection'},
+	  { text: '概率论', link: '/Theory/Probability/' },
+	  { text: '核物理', link: '/Theory/RadiationDetection/'},
 	]
       },
       {
