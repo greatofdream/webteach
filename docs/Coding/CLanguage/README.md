@@ -97,6 +97,7 @@ gcc a.c --verbose 2>&1 | tail -n 2 | head -n 1 | tr ' ' '\n' | grep '\.o$'
 + 未指定行为(Unspecified Behavior)C标准提供了多种行为可选, 具体实现需要选择
 + 实现定义行为(Implementation-defined Behavior)
 + 未定义行为(Undefined Behavior)程序/数据不符合标准的行为,完全没说会发生什么, 一切皆有可能
+
 ABI(Application Binary Interface), 具体包含
 + 处理器的指令集, 寄存器结构, 栈的组织, 访存类型等
 + 处理器可直接访问的基本数据类型的大小, 布局, 对齐方式
@@ -107,3 +108,13 @@ ABI(Application Binary Interface), 具体包含
 ABI手册是计算机系统软硬件协同的重要体现
 + 程序的运行结果与源代码, 编译器, 运行时环境, OS, 硬件等都有关系
 
+## 环境变量
+在c程序中打印环境变量
+```cpp
+extern char **environ;
+
+int main(int argc,char **argv)
+ {
+               printf("%p\n", (void*)environ);
+}
+```
