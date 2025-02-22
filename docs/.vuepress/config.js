@@ -98,6 +98,7 @@ export default defineUserConfig({
 	  { text: '概述', link: '/Theory/' },
 	  { text: '金融学', link: '/Theory/Finance/' },
 	  { text: '概率论', link: '/Theory/Probability' },
+	  { text: '核物理', link: '/Theory/RadiationDetection'},
 	]
       },
       {
@@ -163,6 +164,7 @@ export default defineUserConfig({
 		  '',
 		  'Manjaro',
 		  'Fonts',
+		  'Performance',
 	  ],
 	  '/Security/Web/': [
 		  '',
@@ -190,14 +192,20 @@ export default defineUserConfig({
 		'TVBox',
 		'PortableWifi',
 		'Phone',
+		'DrivingRecorder',
+
 	  ],
 	  '/Hardware/Software': [
 		  '',
 		  'Verilator',
+		  'MicroPython',
 	  ],
 	  '/Hardware/Panel': [
 		  '',
 		  'Ink',
+	  ],
+	  '/Hardware/UDisk': [
+		  '',
 	  ],
 	  '/Theory/Finance': [
 		  '',
