@@ -1,3 +1,4 @@
+import { viteBundler } from '@vuepress/bundler-vite'
 import { defineUserConfig } from 'vuepress'
 import { defaultTheme } from '@vuepress/theme-default'
 import { getDirname, path } from '@vuepress/utils'
@@ -5,6 +6,10 @@ const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 export default defineUserConfig({
+  bundler: viteBundler({
+    viteOptions: {},
+    vuePluginOptions: {},
+  }),
   title: '量子数据分析云',
   description: 'DWF',
   base: '/',
