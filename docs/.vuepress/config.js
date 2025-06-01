@@ -81,12 +81,17 @@ export default defineUserConfig({
 	  { text: 'Geant4', link: '/Software/Geant4'},
 	  { text: 'ROOT', link: '/Software/ROOT'},
 	  { text: 'Matplotlib', link: '/Software/matplotlib'},
+	  { text: '算子', link: '/Software/Operator'},
+	  { text: 'ETH', link: '/Software/eth'},
+	  { text: 'VisualStudio', link: '/Software/VisualStudio'},
 	],
       },
       {
 	text: '编程语言',
+	link: '/Coding/',
 	children: [
 	  { text: 'C语言', link: '/Coding/CLanguage/' },
+	  { text: 'Python', link: '/Coding/Python/' },
 	],
       },
       {
@@ -163,7 +168,11 @@ export default defineUserConfig({
 		  '',
 	    'Torch',
 	  ],
-	  '/OS/Shortcut': [''],
+	  '/Coding/': [
+		  '',
+	    'CLanguage/',
+	    'Python/',
+	  ],	  '/OS/Shortcut': [''],
 	  '/OS/X11': [''],
 	  '/OS/Linux/': [
 		  '',
@@ -212,9 +221,19 @@ export default defineUserConfig({
 	  '/Hardware/UDisk': [
 		  '',
 	  ],
+	  '/Software/': [
+		  '',
+		  'gitea',
+		  'vuepress',
+		  'Geant4',
+		  'ROOT',
+		  'matplotlib',
+		  'Operator',
+	  ],
 	  '/Theory/Finance': [
 		  '',
 		  'CorporateFinance',
+		  'Quant',
 	  ],
 	  '/Tools/': [
 		 '',
