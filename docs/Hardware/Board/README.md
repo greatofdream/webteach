@@ -13,7 +13,7 @@
 + [Android Screen Share](https://github.com/android-notes/androidScreenShare.git)
 + [仿360](https://gitcode.com/JianBiHua/qt_phone_helper/blob/master/threads/connectionthread.cpp)
 + 360手机助手：使用360手机助手连接，之后进入默认安装目录`C:\Program Files (x86)\360\360Safe\mobilemgr\PhoneCtrl`，使用该目录下进入`adb shell`，当前没有root权限，在360手机助手里选择一键ROOT，成功后即可`su`进入root身份，可以看到`/system/bin/su`已经被更新了，用户组为shell，有可执行权限。
-  + 由于手机助手会开启一个后台进程：识别手机连接模块，即使退出软件后，该进程也会唤起软件，需要及时手动关闭。
+  + 由于手机助手会开启多个后台进程：识别手机连接模块，即使退出软件后，该进程也会唤起软件，需要及时手动关闭；`MMReminder`会显示屏幕保护，需要关闭该软件设置里的屏保。
 ## 设备树
 [设备树规范文档 中文翻译](https://github.com/Sunrisepeak/devicetree-specification-chinese/tree/main)
 [知乎上的一个简短介绍](https://zhuanlan.zhihu.com/p/639496875)

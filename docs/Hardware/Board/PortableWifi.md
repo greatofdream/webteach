@@ -21,6 +21,7 @@ Nmap done: 1 IP address (1 host up) scanned in 17.91 seconds
 + 拆开后PCB上丝印层有`MF601SL_CT_V07`，`STM-5`字样，[这里](https://www.bilibili.com/video/BV111421D7P9/?vd_source=da68eeb8cef88094046fa7a8e87d32e9)给了v03,v05,v06改串去云控的焊接方式。
 ![](https://jiemahao.com/wp-content/uploads/2023/03/buy-portable-wifi-by-chips-6.jpg?ezimgfmt=rs:800x790/rscb30/ng:webp/ngcb29)
 + 仅保留电路板，连接usb，长按开机键，reset键，我都按了，最后设备管理中`其他设备`里出现`Android`表明成功识别
++ `adb reboot edl`进入Emergency 模式，可以看到9008端口，同时所有灯都会熄灭。
 + `adb usb`启动，`adb shell`进入adb命令行，发现为MSM8916芯片（高通410）, 400M内存，2.4G可用的存储。切卡密码为`MIFI888888`。远程adbd端口被悄咪咪的改成了0，即禁用.
 ```shell
 shell@msm8916_32_512:/ $ getprop|grep product
