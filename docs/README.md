@@ -18,3 +18,9 @@ features:
 如果希望帮助完善，可以在[这里](https://github.com/greatofdream/webteach.git)提交issue或者PR。
 
 这个博客基于VuePress搭建，目前从v1迁移至v2。
+
+<ClientOnly>
+<HomeFooter />
+</ClientOnly>
+
+
