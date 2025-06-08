@@ -17,8 +17,10 @@ pacman -Syy watt-toolkit-bin
 + steam需要`vulkan-radeon lib32-vulkan-radeon`来支持linux运行游戏。
 ## GRUB
 Manjaro的Grub安装需要参考[这里](https://wiki.manjaro.org/index.php?title=GRUB/Restore_the_GRUB_Bootloader)，另外需要注意安装grub要按照教程运行两次。
++ 如果拷贝系统时出现问题，也可以使用上述的流程
 
-> 如果使用S`ystemRescue`，可以参考[这里](https://www.system-rescue.org/disk-partitioning/Repairing-a-damaged-Grub/)
+> 如果使用`SystemRescue`，可以参考[这里](https://www.system-rescue.org/disk-partitioning/Repairing-a-damaged-Grub/)
+
 ## 滚动升级
 [官方Pacman教程](https://wiki.archlinux.org/title/Pacman)
 + Failed to commit transaction (conflicting files)": 官方教程中`Troubleshooting`中的解决方案是删除存在的文件

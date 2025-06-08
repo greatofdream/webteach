@@ -75,3 +75,9 @@ NUMA(Non-uniform Memory Access):
 `numactl -H`: 显示当前硬件的信息。
 
 `lstopo --of svg > cpu_arch.svg`:查看CPU的拓扑图
+
+## GParted
+GParted可以执行复制分区的操作，类似`dd`
++ `dd`后UUID也会被拷贝，需要重新产生`tune2fs /目标分区 -U random` 修改新分区的UUID
++ `/etc/fstab`里挂载分区的内容也要同步修改
++ 用[SystemRescue](https://www.system-rescue.org/disk-partitioning/Repairing-a-damaged-Grub/)修复Grub；或者用boot-repair调整记录
