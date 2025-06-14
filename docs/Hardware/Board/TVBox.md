@@ -3,6 +3,8 @@
 + [非常详细的编译过程，值得反复阅读](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/documents/README.cn.md)
 + [坑](https://github.com/ophub/amlogic-s9xxx-armbian/issues/491)
 + [镜像地址](https://github.com/ophub/amlogic-s9xxx-armbian/releases),需要选择自己的芯片型号
++ [github build](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/.github/workflows/build-armbian-server-image.yml#L316)默认使用odroidn2编译armbian，然后通过rebuild脚本更换相应的uboot与dtb。
+  + [这里](https://doc.embedfire.com/lubancat-mp157/build_and_deploy/zh/latest/building_image/devicetree_introduce/devicetree_compile.html)提供了更新dtb的方式
 
 Armbian烧写命令`armbian-install`
 + [Guide](https://docs.armbian.com/User-Guide_Getting-Started)
@@ -120,7 +122,7 @@ reboot
   + `meson-gx.dtsi:          ethmac: ethernet@c9410000 {`定义了网卡
 + 配置启动U盘
   + 使用镜像烧写工具写入[armbian](https://github.com/ophub/amlogic-s9xxx-armbian/releases)
-  + 在第一个fat32分区中复制入`uboot.bin`
+  + [自定义说明](https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/documents/README.cn.md#1215-如何添加新的支持设备)提到的编译流程可以在对应项目的`rebuild`文件中找到，`uboot.bin`会被拷贝至`/boot`文件加，因此在第一个fat32分区中手动复制入`uboot.bin`，此外在`boot.cmd`中默认加载`uEnv.txt`，因此需要更新`uEnv.txt`中的dtb文件路径，默认是从项目中的`/model_database.conf`获取。
 + 启动系统，安装`Desktop`等，安装完会自动重启
   + 重启后始终无法进入桌面，并且会有一系列服务Failed，而且偶尔出现文件系统是只读状态，[github](https://github.com/ophub/amlogic-s9xxx-armbian/issues/785)上有人报告了类似问题，但并未解决。
 ```shell
