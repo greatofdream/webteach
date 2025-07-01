@@ -19,6 +19,9 @@ pacman -Syy watt-toolkit-bin
 ```
 + steam需要`vulkan-radeon lib32-vulkan-radeon`来支持linux运行游戏。
 
+## 游戏手柄
+手柄的摇杆会自动偏置，[博客](https://www.mivm.cn/linux-516-game-controller)中说用nintendo的模块会出问题，需要移除模块，识别为XBox360后再使用。
+
 ## GRUB
 Manjaro的Grub安装需要参考[这里](https://wiki.manjaro.org/index.php?title=GRUB/Restore_the_GRUB_Bootloader)，另外需要注意安装grub要按照教程运行两次。
 + 如果拷贝系统时出现问题，也可以使用上述的流程
@@ -32,3 +35,4 @@ Manjaro的Grub安装需要参考[这里](https://wiki.manjaro.org/index.php?titl
 ## AUR
 + yaourt已经不维护了，目前推荐的是yay和paru
 + `tuna`的[aur镜像被移除了](https://github.com/tuna/issues/issues/1424)
+
