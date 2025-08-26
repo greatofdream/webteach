@@ -115,6 +115,13 @@ export default defineUserConfig({
 	text: '工具箱',
 	link: '/Tools/',
       },
+      {
+	text: '求职',
+	link: '/Job/',
+	children: [
+	  { text: '华为', link: '/Job/Huawei/'},
+	]
+      }
     ],
     sidebar: {
           '/guide/web/': [
