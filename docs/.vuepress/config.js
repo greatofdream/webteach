@@ -109,6 +109,7 @@ export default defineUserConfig({
 	  { text: '金融学', link: '/Theory/Finance/' },
 	  { text: '概率论', link: '/Theory/Probability/' },
 	  { text: '核物理', link: '/Theory/RadiationDetection/'},
+	  { text: '算法', link: '/Theory/Algorithm'},
 	]
       },
       {
@@ -241,6 +242,10 @@ export default defineUserConfig({
 		  '',
 		  'CorporateFinance',
 		  'Quant',
+	  ],
+	  '/Theory/': [
+		  '',
+		  'Algorithm'
 	  ],
 	  '/Tools/': [
 		 '',
