@@ -34,3 +34,6 @@ Windows编程遇到的一些有趣的样例
 + 在区域中可以修改字符集
 + visual studio 中可以指定字符集，[详细步骤](https://learn.microsoft.com/zh-cn/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=msvc-170)
 
+## WSL
++ [systemd](https://github.com/microsoft/WSL/issues/10397)需要使用里面的命令修复，否则`Failed to take /etc/passwd lock: Invalid argument`
++ [WSL使用usb](https://learn.microsoft.com/zh-cn/windows/wsl/connect-usb)

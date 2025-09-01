@@ -7,6 +7,8 @@
   + `rocgdb`对[GPU architecture的标识](https://rocm.docs.amd.com/projects/ROCgdb/en/docs-6.0.0/ROCgdb/gdb/doc/gdb/AMD-GPU.html)
   + `hipcc`中的选项[`--offload-arch=<target>`](https://rocm.docs.amd.com/projects/HIP/en/docs-6.0.0/user_guide/hip_porting_guide.html)，在[github issue](https://github.com/ROCm/ROCm/issues/1714)
 + [RoCM Developer Hub](https://www.amd.com/zh-cn/developer/resources/rocm-hub.html)
++ [爱好者的RDNA1.0支持](https://github.com/TheTrustedComputer/ROCm-RDNA1)
++ [b站成功经验](https://github.com/likelovewant/ROCmLibs-for-gfx1103-AMD780M-APU)引用了该仓库编译的[Rocm](https://www.bilibili.com/opus/923618797070319625)
 + 书籍：Accelerated Computing with HIP
 
 ||RDNA| LLVM target| Navi|
@@ -20,6 +22,8 @@
   + `pytorch 1.13.1`设置`export HSA_OVERRIDE_GFX_VERSION=10.3.0`
 + [编译成功例子](https://github.com/xuhuisheng/rocm-build/blob/master/navi10/README_zh_CN.md)
 + [知乎问题](https://www.zhihu.com/question/371965193)
++ [直接指定`GFX_VERSION`](https://github.com/xuhuisheng/rocm-build/blob/master/navi10/README_zh_CN.md)不需要重新编译。
+
 ## 尝试
 + LXC配置`/var/lib/lxc/<lxc name>/config`访问显卡
 ```shell
@@ -43,3 +47,20 @@ Linux无法正常启动，进入就会黑屏
 sudo journalctl -b -1 -p 7|grep amdgpu
 ```
 + 最后发现是线缆没插紧，会导致Xorg无法正确返回屏幕大小，然后amdgpu驱动就会出错
+
+## 安装
++ Arch Linux，对于[RDNA1与RDNA2](https://github.com/Root-Rot/Arch-ROCm-Install-Guide) [Archwiki](https://wiki.archlinux.org/title/GPGPU#ROCm). [我在github的回复](https://github.com/ROCm/ROCm/issues/887#issuecomment-3093209263)
+```shell
+sudo pacman -Syy rocm-hip-sdk rocm-opencl-sdk
+# 在.bashrc中加入
+export ROCM_PATH=/opt/rocm
+export HSA_OVERRIDE_GFX_VERSION=10.1.0
+# 注意10.1.0是因为RX5700是GFX1010
+# Pytorch
+sudo pacman -Syy python-pytorch-rocm
+python -c 'import torch; print(torch.cuda.is_available())'
+# torchvision在arch中只有社区维护的版本，需要根据社区的PKGBUILD本地编译
+yay -Syy python-torchvision-rocm
+```
++ [其他版本安装](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/install/post-install.html)_
+

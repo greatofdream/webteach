@@ -7,7 +7,9 @@
 NPC问题。
 + [知乎解答](https://zhuanlan.zhihu.com/p/93857890)
 + [带有约束的背包问题，如约束可选择的物品数量](https://www.nowcoder.com/practice/bb8efeec4e39421d8fe6516169c98083?tpId=387&tqId=11116733&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D387):多出了选择的物品数量维度，需要将某一个维度，如可选物品的列表用循环替代存储。
++ [完全背包例题模板](https://www.nowcoder.com/practice/deda4293d9b24ce1aeaf1813c88b8c25?tpId=386&tqId=11267007&sourceUrl=%2Fexam%2Foj%2Fta%3FtpId%3D383)：正向更新，可以简化为一维的数组分配
 
++ [动态规划的优化](https://oi-wiki.org/dp/opt/monotonous-queue-stack/)
 ## 二分匹配
 + [匈牙利算法](http://tup.tsinghua.edu.cn/upload/books/yz/096569-01.pdf)
   + 增广道路，交互道路；定理：存在增广道路时可以加入新的节点获得更大匹配，因此无增广道路的匹配即为最大匹配。

@@ -118,3 +118,44 @@ int main(int argc,char **argv)
                printf("%p\n", (void*)environ);
 }
 ```
+## 虚函数
+[CSDN的虚函数介绍](https://blog.csdn.net/haoel/article/details/1948051)
+```cpp
+#include <iostream>
+#include <cstdint>
+using namespace std;
+class Base {
+
+     public:
+
+            virtual void f() { cout << "Base::f" << endl; }
+
+            virtual void g() { cout << "Base::g" << endl; }
+
+            virtual void h() { cout << "Base::h" << endl; }
+
+ 
+
+};
+          typedef void(*Fun)(void);
+
+int main(){
+
+            Base b;
+
+            Fun pFun = nullptr;
+
+            cout << "虚函数表地址：" << (intptr_t*)(&b) << endl;
+            cout << "虚函数表 — 第一个函数在虚表中的地址：" << (intptr_t*)*(intptr_t*)(&b) << "第一个函数地址：" << (intptr_t*)*(intptr_t*)*(intptr_t*)(&b) << endl;
+            pFun = (Fun)*((intptr_t*)*(intptr_t*)(&b));
+            pFun();
+
+            cout << "虚函数表 — 第二个函数在虚表地址：" << (intptr_t*)(*(intptr_t*)(&b)  + sizeof(intptr_t)) << "第2个函数地址：" << (intptr_t*)*(intptr_t*)(*(intptr_t*)(&b) + sizeof(intptr_t)) << endl;
+            pFun = (Fun)*((intptr_t*)(*(intptr_t*)(&b)  + sizeof(intptr_t)));
+            pFun();
+	    return 0;
+}
+```
+
+## 函数返回值
++ 当编译的函数返回值在实现中不存在时，编译通过，但是运行时会报`Segmentation fault`

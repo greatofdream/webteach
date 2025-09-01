@@ -22,3 +22,6 @@
   + 信件编码：20250207142250291 [查询通道](https://ywzl.hrss.henan.gov.cn/queryCodeDetail.do)
 + [疑似报名网站](https://www.hnrrcz.com/html/web/zx/index.html)
   + [机构列表](https://btmlcx.hnrrcz.com/html/)
+
+## 毕业
++ [毕业状态](http://zhjw.cic.tsinghua.edu.cn/portal3rd.do?url=/portal3rd.do&m=bss_lwymps)

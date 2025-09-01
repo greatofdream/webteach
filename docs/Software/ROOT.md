@@ -1,7 +1,12 @@
 # Cern Root
 + `root-config` 查看root编译时的配置
 + `configure`产生`config/Makefile.config`文件包含很多安装信息。
+## Manual and userguide
++ Maunal
+  + [ROOT5](https://root.cern.ch/d/guides/users-guide.html)
+  + 可以自行`git clone`仓库，并制定部分版本为`python2`后编译`make html`。
 ## Rootcint 和 Rootcling
++ [Cint 直到ROOT5](https://root.cern/blog/cling-in-llvm/)
 Rootcint 是旧的用于产生dict的文件，Rootcling是新的
 ## 集成Cmake工程
 [参考](https://root.cern/manual/integrate_root_into_my_cmake_project/)

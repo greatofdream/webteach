@@ -18,3 +18,4 @@
 + [设备树规范文档 中文翻译](https://github.com/Sunrisepeak/devicetree-specification-chinese/tree/main)
 + [知乎上的一个简短介绍](https://zhuanlan.zhihu.com/p/639496875)
 + [zephy文档 gpios](https://docs.zephyrproject.org/latest/build/dts/api/bindings/led/gpio-leds.html) 
++ [S3C2440由于无dts，所以难以适配Linux3.0之后的版本](https://www.cnblogs.com/iot-yun/p/11403498.html)
