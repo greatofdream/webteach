@@ -23,7 +23,7 @@
 2
 
 ## 样例代码
-树型DP
+树型DP，分配的节点数为4n，参考了[线段树的证明](https://oi-wiki.org/ds/seg/#__tabbed_1_2)
 ```python
 arr = input().split()
 
