@@ -1,5 +1,18 @@
 # Vuepress
+## upgrade
++ `The requested module 'vuepress/utils' does not provide an export named 'globby'`: `vuepress/utils`的版本需要和之前的包匹配，直接`npm i @vuepress/utils`就会报错，需要指定旧的版本。
 
+## website
+`Blocked request. This host ("xxxx") is not allowed`
+```
+bundler: viteBundler({
+  viteOptions: {
+      server: {
+          allowedHosts: ['你的域名xxx.com', '.xxx.com']
+      }
+  }
+}),
+```
 ## vuepress-plugin-md-enhance
 [它](https://plugin-md-enhance.vuejs.press/zh/)看起来是[vuepress-theme-hope](https://github.com/vuepress-theme-hope/vuepress-theme-hope/blob/3b42d96655d2cf80a91891eb2234c9bac5aa6ede/demo/md-enhance/src/.vuepress/client.ts#L6)的一个包，有很多特性，包括
 + Tex支持
