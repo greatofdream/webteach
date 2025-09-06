@@ -7,7 +7,11 @@ const __dirname = getDirname(import.meta.url)
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 export default defineUserConfig({
   bundler: viteBundler({
-    viteOptions: {},
+    viteOptions: {
+      server: {
+        allowedHosts: ['web.lovestrong.top'],
+      },
+    },
     vuePluginOptions: {},
   }),
   title: '量子数据分析云',
