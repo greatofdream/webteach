@@ -34,6 +34,20 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 + 我将Linux Deploy Pro中添加新的镜像的commit cherry-pick到`v2.5.1`分支，使其能在旧手机安卓4.4支持下的同时，可以安装更新的版本，[apk下载](https://github.com/greatofdream/Linuxdeploy-Pro/releases/tag/2.5.1)，测试了ubuntu [focal会出现dpkg错误](https://github.com/meefik/linuxdeploy/issues/1255)，，更高的版本不行，比如`jammy`依赖`zstdcat`，但是旧的安卓上没有可用的`busybox`。
 + `alphine`可以完美支持。
 
+## cloudflared
+`alpine`中可以引入在`/etc/apk/repositories`引入`http://dl-cdn.alpinelinux.org/alpine/edge/testing`
++ `apk add cloudflared cloudflared-openrc`
++ 根据[manual](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/local-management/create-local-tunnel/)在`/etc/cloudflared/config.yml`加入内容
+```shell
+url: http://localhost:8000
+tunnel: 0010ec29-2b77-4207-977e-1f2e04f5e5c4
+```
++ 根据网站上带有token的命令手动启动进程
+
+启动nginx：
++ `apk add openrc`, `touch /run/openrc/softlevel`
++ [设置网络loop](https://stackoverflow.com/questions/69218786/error-cannot-start-nginx-as-networking-would-not-start-on-alpine-docker-image): `echo 'rc_provide="loopback net"' >> /etc/rc.conf`
+
 ## Android 远程
 + ARDC
 + [Android Screen Share](https://github.com/android-notes/androidScreenShare.git)
