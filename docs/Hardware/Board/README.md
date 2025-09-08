@@ -4,14 +4,17 @@
 |Y10P10|A33/4核|Mali 400MP2|1GB|8GB|
 
 ## Linux Deploy
-在旧的安卓手机运行linux，支持安卓4.4，其中[2.5.1以下版本可以支持Android4.4](https://github.com/meefik/linuxdeploy/releases)
+在旧的安卓手机运行linux，支持安卓4.4，其中[2.5.1以下版本可以支持Android4.4](https://github.com/meefik/linuxdeploy/releases) 2.5.1版本中`app/build.gradle`中`minSdkVersion 16`，后续版本升级了，无法支持android4.4
 + 由于TUNA不再支持http，但是linux deploy目前需要从http访问，所以建议更新到阿里云镜像。
 + 电池电量信息位于`/sys/class/power_supply/battery/`
 + 开机自启动：在`chroot`环境中无法使用systemctl，可以通过设置linux deploy的[初始化路径启动](https://www.cnblogs.com/Luad/p/10409048.html)
 + Language: `LANG=en_US.UTF-8`
 + [image size](https://github.com/meefik/linuxdeploy/issues/395): 需要先完全退出应用，保证当前image没有被挂载。可以在adb中通过`df`命令确认。
 + `Problem upragding to focal fossa 20.04 authenticate 'focal.tar.gz' against 'focal.tar.gz.gpg' Authentication failed`: [解决方案](https://askubuntu.com/questions/1254519/problem-upragding-to-focal-fossa-20-04-authenticate-focal-tar-gz-against-foca)
++ 注意需要`usermod -G 3003 root`，否则系统中root用户无法执行ping命令`socket: Permission denied`
 + [upgrade ubuntu](https://github.com/meefik/linuxdeploy/issues/1260)
+  + 直接upgrade会出错`Authentication failed Authenticating the upgrade failed`: [github](https://github.com/meefik/linuxdeploy/issues/1192)里的issue提示可以更新key
+  + 目前升级后apt会出现无法使用的问题`dpkg (subprocess): unable to execute package control information extraction (dpkg-deb): Bad address`。
 + `nodejs`:由于linux deploy支持到bionic18.04，所以nodejs版本很低v8.x，手动安装也只能装到`v16`，更高会缺少包
 ```shell
 # 将仓库源更新到apt/sourcelist.d/
@@ -23,6 +26,11 @@ node -v
 # cnpm
 npm install cnpm -g --registry=https://registry.npmmirror.com
 ```
+## Linux Deploy Pro
+有人尝试在Linux deploy上提供后续 linux 发行版的支持，并且加入了github workflow。我[克隆了它](https://github.com/greatofdream/Linuxdeploy-Pro)，并尝试将其编译至支持安卓4.4版本，放在了`android_4`分支。
++ 我参考了原仓库在[不同分支上的diff](https://github.com/meefik/linuxdeploy/compare/2.5.1...master)
++ [github workflow doc](https://docs.github.com/en/actions/reference/workflows-and-actions)
++ [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html):对gradle不是特别熟悉，返现`-Pvalue`传参给`setting.gradle`后可以直接索引变量名称
 
 ## Android 远程
 + ARDC
