@@ -31,6 +31,8 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 + 我参考了原仓库在[不同分支上的diff](https://github.com/meefik/linuxdeploy/compare/2.5.1...master)
 + [github workflow doc](https://docs.github.com/en/actions/reference/workflows-and-actions)
 + [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html):对gradle不是特别熟悉，返现`-Pvalue`传参给`setting.gradle`后可以直接索引变量名称
++ 我将Linux Deploy Pro中添加新的镜像的commit cherry-pick到`v2.5.1`分支，使其能在旧手机安卓4.4支持下的同时，可以安装更新的版本，[apk下载](https://github.com/greatofdream/Linuxdeploy-Pro/releases/tag/2.5.1)，测试了ubuntu [focal会出现dpkg错误](https://github.com/meefik/linuxdeploy/issues/1255)，，更高的版本不行，比如`jammy`依赖`zstdcat`，但是旧的安卓上没有可用的`busybox`。
++ `alphine`可以完美支持。
 
 ## Android 远程
 + ARDC
