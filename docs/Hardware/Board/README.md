@@ -42,12 +42,18 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 url: http://localhost:8000
 tunnel: 0010ec29-2b77-4207-977e-1f2e04f5e5c4
 ```
-+ 根据网站上带有token的命令手动启动进程
++ 根据网站上带有token的命令手动启动进程，国内运营商似乎会禁用udp的流量，所以[默认的`quic`协议会不工作](https://www.huluohu.com/posts/514/)，因此需要加上`--protocol auto`
+```shell
+ cloudflared tunnel --protocol auto run --token <你的token>
+```
 
 启动nginx：
 + `apk add openrc`, `touch /run/openrc/softlevel`
 + [设置网络loop](https://stackoverflow.com/questions/69218786/error-cannot-start-nginx-as-networking-would-not-start-on-alpine-docker-image): `echo 'rc_provide="loopback net"' >> /etc/rc.conf`
 
+ssh 连接
+[文档](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-infrastructure-access/)
++ 有多种方式保护连接，如[使用浏览器界面](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-browser-rendering/)，[相关的教程](https://blog.merack.top/wu-xu-gong-wang-ip-tong-guo-cloudflare-tunnelsshi-xian-sshan-quan-nei-wang-chuan-tou.html)
 ## Android 远程
 + ARDC
 + [Android Screen Share](https://github.com/android-notes/androidScreenShare.git)
