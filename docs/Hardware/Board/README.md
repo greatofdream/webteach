@@ -33,6 +33,7 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 + [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html):对gradle不是特别熟悉，返现`-Pvalue`传参给`setting.gradle`后可以直接索引变量名称
 + 我将Linux Deploy Pro中添加新的镜像的commit cherry-pick到`v2.5.1`分支，使其能在旧手机安卓4.4支持下的同时，可以安装更新的版本，[apk下载](https://github.com/greatofdream/Linuxdeploy-Pro/releases/tag/2.5.1)，测试了ubuntu [focal会出现dpkg错误](https://github.com/meefik/linuxdeploy/issues/1255)，，更高的版本不行，比如`jammy`依赖`zstdcat`，但是旧的安卓上没有可用的`busybox`。
 + `alphine`可以完美支持。
+  + crond 的service没有安装，根据[回答](https://gitlab.alpinelinux.org/alpine/aports/-/issues/10907?__goaway_challenge=cookie&__goaway_id=31ba68cdc8eada90780d5295cfe6c719&__goaway_referer=https%3A%2F%2Fwww.google.com%2F)中提到的内容，需要手动安装`apk add busybox-openrc`，会在`/etc/init.d/`中增加`crond`。
 
 ## cloudflared
 `alpine`中可以引入在`/etc/apk/repositories`引入`http://dl-cdn.alpinelinux.org/alpine/edge/testing`
@@ -54,6 +55,7 @@ tunnel: 0010ec29-2b77-4207-977e-1f2e04f5e5c4
 ssh 连接
 [文档](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-infrastructure-access/)
 + 有多种方式保护连接，如[使用浏览器界面](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-browser-rendering/)，[相关的教程](https://blog.merack.top/wu-xu-gong-wang-ip-tong-guo-cloudflare-tunnelsshi-xian-sshan-quan-nei-wang-chuan-tou.html)
+
 ## Android 远程
 + ARDC
 + [Android Screen Share](https://github.com/android-notes/androidScreenShare.git)
