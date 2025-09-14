@@ -114,6 +114,7 @@ export default defineUserConfig({
 	  { text: '概率论', link: '/Theory/Probability/' },
 	  { text: '核物理', link: '/Theory/RadiationDetection/'},
 	  { text: '算法', link: '/Theory/Algorithm'},
+	  { text: '粒子物理', link: '/Theory/ParticlePhysics/'},
 	]
       },
       {
@@ -179,6 +180,7 @@ export default defineUserConfig({
 	  '/DeepLearning/': [
 		  '',
 	    'Torch',
+	    'LLM',
 	  ],
 	  '/Coding/': [
 		  '',
