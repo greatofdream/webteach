@@ -180,7 +180,7 @@ export default defineUserConfig({
 	  '/DeepLearning/': [
 		  '',
 	    'Torch',
-	    'LLM',
+	    'LLM/',
 	  ],
 	  '/Coding/': [
 		  '',
