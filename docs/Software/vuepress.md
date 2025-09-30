@@ -46,3 +46,6 @@ layout: SlidePage
 其它markdown转幻灯片的工具:
 + [Marp](https://marpit.marp.app/) [Marp 知乎教程](https://zhuanlan.zhihu.com/p/149521766) [Marp 博客教程]()
 + [Markdown Preview Enhanced,Vscode plugin](ma://shd101wyy.github.io/markdown-preview-enhanced/#/zh-cn/markdown-basics)
+
+## latex
+可以参考[文档](https://ecosystem.vuejs.press/zh/plugins/markdown/markdown-math.html)使vuepess支持latex。
