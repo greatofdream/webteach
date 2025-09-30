@@ -14,7 +14,8 @@
 + BERT:
 + RAG: 
   + 综述：[Towards Agentic RAG with Deep Reasoning: ASurvey of RAG-Reasoning Systems in LLMs](https://arxiv.org/pdf/2507.09477)
-  + [开发实战](https://datawhalechina.github.io/all-in-rag/#/)
+  + [All-in-RAG | 大模型应用开发实战](https://datawhalechina.github.io/all-in-rag/#/)
+  + [华为的一站式平台及教程](https://developer.huaweicloud.com/competition/information/1300000124/circumstance)并可以在[Versatile](https://developer.huaweicloud.com/competition/information/1300000124/circumstance)使用自定义的agent。
 
 ## 大语言模型 中文版
 + 大语言模型的演化：统计学习语言模型（n-gram）、神经网络语言模型（word2vec使用无标注文本学习词嵌入表示）、预训练语言模型（ELMo、BERT、GPT-1 预训练-微调模式）、大语言模型（Scaling Law等） 
