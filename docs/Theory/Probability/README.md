@@ -17,7 +17,7 @@
 
 ## 广义线性回归
 + [Generalized Linear Models and Extensions]()
-  + EDM: 指数族，由下面的参数定义
+  + EDM (Exponential Dispersion Model): 指数族，由下面的参数定义
     + 自然参数 `theta(mu)`
     + 放缩参数 phi
     + 权重 w

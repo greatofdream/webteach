@@ -2,6 +2,7 @@ import { viteBundler } from '@vuepress/bundler-vite'
 import { defineUserConfig } from 'vuepress'
 import { defaultTheme } from '@vuepress/theme-default'
 import { getDirname, path } from '@vuepress/utils'
+import { markdownMathPlugin } from '@vuepress/plugin-markdown-math'
 const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
@@ -73,6 +74,7 @@ export default defineUserConfig({
 	  { text: 'GPU', link: '/Hardware/GPU/' },
 	  { text: '开发板', link: '/Hardware/Board/'},
 	  { text: '开发软件', link: '/Hardware/Software/' },
+	  { text: '数字电路', link: '/Hardware/MOSFET/' },
           { text: '屏幕', link: '/Hardware/Panel/' },
           { text: 'U盘', link: '/Hardware/UDisk/' },
 	],
@@ -115,6 +117,7 @@ export default defineUserConfig({
 	  { text: '核物理', link: '/Theory/RadiationDetection/'},
 	  { text: '算法', link: '/Theory/Algorithm'},
 	  { text: '粒子物理', link: '/Theory/ParticlePhysics/'},
+	  { text: 'AI Infra', link: '/Theory/AIInfra'},
 	]
       },
       {
@@ -186,7 +189,9 @@ export default defineUserConfig({
 		  '',
 	    'CLanguage/',
 	    'Python/',
-	  ],	  '/OS/Shortcut': [''],
+	    'R/',
+	  ],
+	  '/OS/Shortcut': [''],
 	  '/OS/X11': [''],
 	  '/OS/Linux/': [
 		  '',
@@ -228,6 +233,9 @@ export default defineUserConfig({
 		  'Verilator',
 		  'MicroPython',
 	  ],
+	  '/Hardware/MOSFET': [
+		  '',
+          ],
 	  '/Hardware/Panel': [
 		  '',
 		  'Ink',
@@ -272,6 +280,9 @@ export default defineUserConfig({
 	      components: {
 		      MyChart: path.resolve(__dirname, './components/MyChart.vue'),
 	      },
+      }),
+      markdownMathPlugin({
+      // 选项
       }),
   ],
 })
