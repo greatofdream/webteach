@@ -74,7 +74,7 @@ export default defineUserConfig({
 	  { text: 'GPU', link: '/Hardware/GPU/' },
 	  { text: '开发板', link: '/Hardware/Board/'},
 	  { text: '开发软件', link: '/Hardware/Software/' },
-	  { text: '数字电路', link: '/Hardware/MOSFET/' },
+	  { text: '数字电路', link: '/Hardware/YSYX/' },
           { text: '屏幕', link: '/Hardware/Panel/' },
           { text: 'U盘', link: '/Hardware/UDisk/' },
 	],
@@ -233,8 +233,9 @@ export default defineUserConfig({
 		  'Verilator',
 		  'MicroPython',
 	  ],
-	  '/Hardware/MOSFET': [
+	  '/Hardware/YSYX': [
 		  '',
+		  'MOSFET',
           ],
 	  '/Hardware/Panel': [
 		  '',
