@@ -45,12 +45,12 @@ clang -fsyntax-only -Xclang -ast-dump a.c
 ```
 + 语义分析:按照C语言的语义确定AST中每个表达式的类型,clang的-ast-dump把语义信息也一起输出了
   + 静态程序分析：`clang a.c --analyze -Xanalyzer -analyzer-output=text`
-+ 中间代码生成:中间表示(IR) = 编译器定义的, 面向编译场景的指令集;将C语言状态机翻译成IR状态机
++ 中间代码生成:中间表示(IR) = 编译器定义的, 面向编译场景的指令集;将C语言状态机翻译成IR状态机。pclang使用的中间代码叫LLVM IR, gcc使用的中间代码叫GIMPLE。
 ```shell
 clang -S -emit-llvm a.c
 ```
-+ 优化:比如下面代码例子将常数预先计算出来(常数传播)
-  + 对volatile修饰变量的访问需要严格执行,因此不会被常数传播优化影响
++ 优化:比如下面代码例子将常数预先计算出来(常数传播)，此外还有死代码消除、冗余操作消除、代码强度消减、公共子表达式、循环不变代码外提、函数内联。开启`-O1`后中间代码会少
+  + 对volatile修饰变量的访问需要严格执行,因此不会被常数传播优化影响。volatile 关键字的目的是告诉编译器：这个变量可能会被编译器不知道的方式（例如，硬件、中断服务程序、或在多线程中被其他线程）在任何时候修改。
   + 程序结束时, 写入文件的数据需要与严格执行时一致
   + 交互式设备的输入输出(stdio.h)需要与严格执行时一致
 ```shell
@@ -92,11 +92,13 @@ gcc a.c --verbose 2>&1 | tail -n 2 | head -n 1 | tr ' ' '\n' | grep '\.o$'
 + crt = C runtime, C程序的运行时环境(的一部分)
 + 可以通过objdump确认
 
+用strace和gdb的`starti`可以看到程序从ld链接库的`_start`开始
 ## 实现定义行为和ABI(Application Binary Interface)
 + 只定义了类型的最小范围
 + 未指定行为(Unspecified Behavior)C标准提供了多种行为可选, 具体实现需要选择
 + 实现定义行为(Implementation-defined Behavior)
 + 未定义行为(Undefined Behavior)程序/数据不符合标准的行为,完全没说会发生什么, 一切皆有可能
+  + 序列点：在`一站式C编程`也提到了，表达式中函数调用的顺序是未定义的。详细参看[C99手册](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf)。
 
 ABI(Application Binary Interface), 具体包含
 + 处理器的指令集, 寄存器结构, 栈的组织, 访存类型等
