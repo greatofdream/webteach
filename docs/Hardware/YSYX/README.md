@@ -1,5 +1,5 @@
 # YSYX
-+ [F阶段](./MOSFET.md)，[logisim实现CPU仓库](https://gitcode.com/zaq15csdn/logisim)
++ [F阶段](./MOSFET.md)，[logisim实现CPU仓库](https://gitcode.com/zaq15csdn/logisim) [riscv机器码转指令](https://luplab.gitlab.io/rvcodecjs/)
 + E阶段:
   + [C语言](https://gitcode.com/zaq15csdn/SimpleTools_C)
   + [Verilog](https://hdlbits.01xz.net/wiki):里面有些例子使用的system verilog语法，多了一些特性
@@ -24,3 +24,63 @@
     + 头文件搜索路径：可以阅读`man gcc`给出的文档`-I`选项，`-I`选项包含的路径在系统默认路径(standard system directories)之前，所以通过这种方式可以覆盖系统目录的头文件。`gcc -E xx.c --verbose >/dev/null`会输出包含搜索头文件路径的信息，`-v`或者`--verbose`将一些信息输出到标准错误。
     + `-dM`可以打印预处理器定义的所有宏，`echo | gcc -dM -E - | sort`打印所有的宏，riscv64-gcc比gcc少了`amd64,HLE,SSE,SSE2`等宏定义多了`riscv`等定义，其它基本相同。
     + [编译过程](/Coding/CLanguage/)
+    + GUI：在PA0使用`init.sh`克隆abstract-machine仓库，会调用init函数将`AM_HOME`设置为相应的路径，并自动写入bashrc，用于后续am-kernel编译。
+      + `io_write`在` abstract-machine/klib/include/klib-macros.h`定义了宏，替换为`ioe_write`
+      + 由于am中`init_platform`时会抛出异常，需要通过`handle SIGUSR1 nostop noprint pass`关闭该异常，否则gdb会停下。当约束水平和数值的像素点为256时，周围有黑边，原因未知。
+      + 编译时需要链接库，其中`-lm`需要加入，虽然在示例Makefile中不会显示，全部的链接选项为`minirvEMU-gui: LDLIBS+= -Wl,-no-whole-archive -Wl,-z -Wl,noexecstack -lSDL2 -ldl -lm`
+  + E5: RTL(Register Transfer Level)仿真
+    + 功能验证
+      + [Verilator相关内容](/Hardware/Software/Verilator)，教程提供了双控开关，可以参考[这里的实现](https://gitcode.net/verilog/njuexperiment/-/blob/master/ex1/twoxor.cpp)
+      + nvboard项目更新，其中`constr.h`被重命名了，而之前的编译固定生成的`component.d`没有办法更新，因此需要删除`build/*.d`文件，然后重新编译
+      + nvboard调用`auto_pin_bind.py`将`*.nxdc`转化为cpp文件，其中`top=<topmodule>`会决定转化后的cpp包含的头文件
+    + Verilog的仿真行为和编码风格，位于[Verilator手册](http://staff.ustc.edu.cn/~songch/download/IEEE.1364-2005.pdf)第11章
+      + Process组成了design，值的更新是update event，以不确定的顺序影响相关的Process，这些Process的计算是evaluation event
+      + chap11.4给出了伪代码执行所有event的流程，当所有event执行完，才会将时间增加
+      + Stratified event queue：event被添加至5个种类，但只能从active event中移除，5个种类按照执行顺序包括：`active event`, `inactive event`, **`Nonblocking assign update event`**, `Monitor event`, `future event`。处理所有`active`为simulation cycle （所以我觉得一个周期内其实会有很多simulation cycle），active event执行顺序不定。`#0`挂起当前的Process，并加入一个event到`inactive`中，在下一个simulation cycle执行恢复操作，
+      + `display`是evaluation event，和update event执行顺序是任意的
+      + 阻塞赋值11.6.3说的不太清楚，在没有指定delay时，猜测时active event，和`#0`不一样
+      + 判断
+        + 使用#0可以将赋值操作强制延迟到当前仿真时刻的末尾.:正确，会使得这个update event放到inactive event queue，在下一个simulation cycle执行
+        + 在同一个begin-end语句块中对同一个变量进行多次非阻塞赋值, 结果是未定义的：错误，这个属于Determinism，begin-end块顺序执行
+        + 用always块描述组合逻辑元件时, 不能使用非阻塞赋值.:之前HDLBits中我一直坚持在组合逻辑块`always(@*)`中使用`=`，在时序逻辑块`always(@posedge(clk))`使用`<=`。实际上前者用`<=`看起来如果使用的值不会被其它阻塞赋值影响应该也可以。Gemini说编译器会自动识别编译为组合逻辑。
+        + 不能在多个always块中对同一个变量进行赋值.:我本来以为可以，因为会被按event顺序执行，但是使用`=`可能会出现Race condition，因为是两个过程产生的active event，顺序是不定的。
+        + 不建议使用$display系统任务, 因为有时候它无法正确输出变量的值.：display的执行顺序可能在阻塞赋值之前，所以不建议使用
+        + $display无法输出非阻塞赋值语句的结果：正确，在某个时间步中，display是active event，非阻塞赋值是 nonblocking assign update event。
+      + 分析Verilog代码行为，abcde依次为51133
+      + Verilator使用静态调度，Synopsys VCS使用动态调度
+    + 综合：使用Yosys和iEDA开源工具将RTL转换为GDL(Graphic Design System)版图
+      + 教程提供的`yosys-sta`下`make init`会自动下载预编译的iEDA和nangate45工艺库
+      + 粗粒度综合： 粗粒度表示是指采用运算符级别的单元来描述设计。proc命令主要将RTLIL中过程描述的switch-case部分转换为$mux单元, 将sync描述转换为D锁存器类型或D触发器类型的单元, 从而得到完整的粗粒度表示
+      + 细粒度综合：
+    + PDK（Process design kit）
+      + nangate45的工艺LEF文件`pdk/nangate45/lef/Nangate45_tech.lef`, 其中包含10层金属层。L1-3的width=0.07，L4-6 0.14，L7-8 0.4, L9-10 0.8
+      + 标准单元的属性
+        + lib文件 功能和时序，功耗面积 `pdk/nangate45/lib/Nangate45_typ.lib`
+        + Verilog文件 行为模型`pdk/nangate45/sim/cells.v`
+        + LEF文件 物理几何信息`pdk/nangate45/lef/Nangate45_stdcell.lef`，chatglm说x轴可以让自动布线容易执行，y轴构建电源网络。
+        + CDL文件 - 晶体管网表:`M_i_2`漏极是VDD，但是由于PMOS是对称的，所以反接也没问题。`pdk/nangate45/cdl/NangateOpenCellLibrary.cdl`
+        + GDS文件 物理版图
+      + 标准单元的分类
+        + 工艺库里常见的 AOI（And Or Invert）和 OAI（Or And Invert）门，`OAI22_X1`有8个晶体管，`X1`代表驱动能力
+        + 逻辑门单元：`NAND2_X1`, `NAND2_X2`和`NAND2_X4`面积和功耗，面积和leakage power`0.798um2 177.39mW` `1.330um2 34.779mW` `2.394um2 69.577nW` 以上信息来自[Nangate45 Library Databook](https://www.cs.upc.edu/~jpetit/CellRouting/nangate/Front_End/Doc/Databook/CornerList.html)，通过并联`NAND2_X1`构造X2,X4,可以在前面链接寻找到相应的图。
+        + 时序单元：`DFF_X1`使用了28个晶体管，
+        + IO单元：`pdk/nangate45/lib/dummy_pads.lib` `cell(PADCELL_SIG_H)`的area=200，单位按照教程前面所述通常为`um2`
+        + 驱动单元
+        + 物理单元
+        + 宏单元：如sram，其中提到的仓库名为`bsg_fakeram`，因此猜测`lib/fakeram*.lib`中是sram信息。选择`fakeram45_256x96.lib` area=13701.660，信息密度为1.79；而D-FlipFlop是`DFF_X1` area=4.522，信息密度明显小于sram，估计有10倍差距。
+        + 复杂功能单元：`HA_X1`面积2.66，如果通过逻辑单元`S=A^B` `C=A&B` [异或门转换](/Hardware/YSYX/MOSFET)一个与门，两个或非，面积为`1.064+2*0.798=2.66`
+        + 时钟专用单元
+        + 电源管理单元
+        + 测试调试单元
+      + PVT角：在`yosys-sta/scripts/pdk/nangate45.tcl`中指定PVT角文件`yosys-sta/pdk/nangate45/lib/`
+      + 轨道数：size 0.19 by 1.4, Metal1 的PITCH是0.14，所以轨道数是10
+    + 物理设计：从网表到版图
+      + `FILLCELL_X1`尺寸和前面的size一致。
+    + 代码风格和规范
+    + 数字电路设计：教程建议使用[chisel](https://www.chisel-lang.org/docs)，文档中提供了[推荐书籍及翻译，包括中文版](https://www.imm.dtu.dk/~masca/chisel-book.html)
+      + 如果想用jupyter，需要安装`jupyter-notebook`[`almond`](https://almond.sh/)(jupyter的scala kernel) `yay -Syy scala-cli almond sbt` almond依赖`coursier`(scala的包管理器)，会自动安装。
+        + scala-cli会根据scala脚本中标注的版本号，自动下载
+        + 在2025/11/01时[由于打包者的设置yay默认安装almond的scala=3.6](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=almond)，解决方案是重新安装scala内核`coursier launch --fork almond --scala 2.13.17 -- --install`，没有指定路径，会默认安装到`./local/share/jupyter/kernels/scala`，重启即可
+      + [chisel](https://www.chisel-lang.org/docs/explanations/motivation)使用Verilog的子集，避开了不可综合的缺点
+      + Port 在 Data上增加了IO的方向。
+      
