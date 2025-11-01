@@ -26,6 +26,7 @@
 ## 加法器
 + 加法器的进位和减法器的借位均可从低位传递给高位
 + 源码加法器的符号位
+
 |A0|A1|S|C|
 |-|-|-|-|
 |0|0|0||
@@ -45,6 +46,7 @@
 
 ## 计算机系统的状态机模型
 + 处理器组成和工作原理。奇数相加的指令集与状态如下，其中由于r1初始化为1，所以最后每次先加r2，再更新r1，终止条件被设置为11.
+
 |isa|machine code|PC r0 r1 r2 r3|
 |-|-|-|
 |||0 0 0 0 0|
@@ -76,11 +78,31 @@
   + 在指令的基本格式中, 需要5位来表示一个GPR，因为一共有32个GPR
   + add指令的格式`rs2 rs1 rd op`
   + RV32E为嵌入式（Embedding）设备设计，寄存器数目从32减少到16
-+ minirv: 支持如下8条指令: add, addi, lui, lw, lbu, sw, sb, jalr
++ minirv: 支持如下8条指令: add, addi, lui, lw, lbu, sw, sb, jalr；此外在E4任务中还有ebreak指令
+  + `addi`: chap2.4.1, 属于Integer Register-Immediate Instruction `imm[11:0] rs1[4:0] funct3 rd[4:0] opcode` 
+  + `jalr`: chap2.5.1, Unconditioal jumps `offset[11:0] rs1 funct3 rd opcode`
+  + `add`: chap2.4.2, integer register-register operation `funct7 rs2 rs1 funct3 rd opcode`
+  + `lui`: chap2.4.1 `imm[31:12] rd opcode`
+  + `lw,lbu`: chap2.6 `offset[11:0] rs1 funct3 rd opcode` 
+  + `sw,sb`: chap2.6 `imm[11:5] rs2 rs1 funct3 imm[4:0] opcode`
+  + `ebreak`: chap2.8 属于Environment call and breakpoints `func12 rs1 funct3 rd opcode`
   + 34章有机器码：0110011, 0010011, , , , , , 1100111
   + 寄存器即RAM，使用RAM宽度选择和指令宽度32一致，地址位宽理论上可以保持和PC寄存器一致`32=2^5`。
   + 测试程序中：a0=10,ra=1 
   + `lui`将低12位直接置0，而不是扩展高12位，这里之前没认真看手册
+
+|ins|opcode|`funct3`|
+|-|-|-|
+|`addi`|`0x13`| `0`|
+|`jalr`|`0x67`| `0`|
+|add|`0x33`|0|
+|lui|`0x37`||
+|lw|`0x03`|2|
+|lbu|`0x03`|4|
+|sw|`0x23`|2|
+|sb|`0x23`|0|
+|ebreak|`0x73`|0, func12=1|
+
 ```shell
 00000000 <_start>:
    0:	01400513          	addi	a0,zero,20 # R10=R10+20
@@ -107,9 +129,11 @@
 01 e9 4c 03 lbu # R24=@(R18+30)低位字节=60
 ```
 + mem.hex一共742467byte，共185616个word，需要18位地址
+  + mem.hex最后停在`PC=0x1220 jalr`, sum.hex停在`PC=0x228 jalr` `00020067`
 + `对于lw和sw指令计算出的访存地址, 我们可以假设其二进制表示的最低2位均为0. 我们提供的测试程序会保证这一性质, 因此不会出现需要访问的内容跨越了RAM中两个存储字的情况.`这句话说明可以安全的扔掉低位的两位去寻址。
 + 悬空的引脚输入会影响仿真的输出结果
 + `mem.hex`: `a0`寄存器根据`18: fea12823`可以利用` 2**12-int(s[:7]+s[-12:-7],base=2)`计算出为偏移为16，`int(s[7:12], base=2)`得到a0是R10
++ `sum.hex`停在`PC=0x228,ins=0x00020067`，`mem.hex`停在`PC=0x1220,ins=0x00020067`
 + [这个网站提供了寄存器名称和排列顺序](https://riscv-simulator-five.vercel.app/#)，[这个网站](https://cpulator.01xz.net/?sys=rv32)可以直接运行hex文件，后面的笨拙的debug对比时用的就是这个。
 + `addi` `jalr` `lui`确认，`sw` `lw` `sb` `lbu`我看起来觉得没问题，后来仔细比较发现是`lbu`的位选择搞错了，debug了接近10h。
 + video组件，基地址为`0x20000000`，实际上logisim的ROM和RAM组件的最大容量根本到不了这个地址。教程给出的例子表明每4个字节对应的地址是一个像素，因此可以复用前面RAM的地址索引，舍弃低2位。由于一行256个像素，低8位是y，高8位是行。加上舍弃的2位，一共18位，对应最高的地址`0x20040000`
