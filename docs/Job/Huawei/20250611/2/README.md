@@ -33,7 +33,7 @@
 0
 
 ## 示例代码
-看起来默认剪枝叶节点
+看起来默认剪枝叶节点，边缘设备定义不会随剪枝而变化。
 ```python
 n = int(input())
 from collections import deque
