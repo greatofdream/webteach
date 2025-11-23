@@ -46,6 +46,9 @@ a = set()
 [collections 里提供的dict](https://docs.python.org/3/library/collections.html#collections.defaultdict)
 + `collections.defaultdict(list)`：产生值为列表的dict
 
+## Counter
+[collections里提供Counter](https://docs.python.org/3/library/collections.html#collections.Counter)仍然是dict结构，可以用来替代`numpy`的`unique`。
+
 ## 字符与字符串
 字符操作包括
 + `ord`将字符转为整数

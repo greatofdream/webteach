@@ -32,6 +32,8 @@ gcc -E a.c -v > /dev/null
   + `-isystem`指定的目录
   + 标准系统目录
   + `-idirafter`指定的目录
++ 寻找头文件`gcc -E a.c --verbose > /dev/null`
++ `gcc-riscv`
 
 ## 编译
 编译包括多个阶段，借助`clang`可以看到各个阶段的步骤，功能等价与gcc,但是可以更好的展示编译的中间步骤
