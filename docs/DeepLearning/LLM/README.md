@@ -2,7 +2,9 @@
 + [交大的课程资料](https://github.com/Lordog/dive-into-llms) [昇腾的类似的课程与资料](https://www.hiascend.com/edu/growth/lm-development#classification-floor-1)
 + [动手学大模型应用开发](https://datawhalechina.github.io/llm-universe)：提供了LLM的API调用示例
 + [面向开发者的 LLM 入门教程 吴恩达大模型系列课程中文版](https://github.com/datawhalechina/llm-cookbook)
++ [Sora](https://zhuanlan.zhihu.com/p/690502443)将视频转换为token，扭转了CNN的CV统治地位。
 [大模型排名](https://lmarena.ai/leaderboard)
+
 ## 论文
 + 综述
   + [A Survey of Large Language Models](https://arxiv.org/abs/2303.18223) [大语言模型 中文版](https://llmbook-zh.github.io/)
@@ -16,7 +18,9 @@
   + 综述：[Towards Agentic RAG with Deep Reasoning: ASurvey of RAG-Reasoning Systems in LLMs](https://arxiv.org/pdf/2507.09477)
   + [All-in-RAG | 大模型应用开发实战](https://datawhalechina.github.io/all-in-rag/#/)
   + [华为的一站式平台及教程](https://developer.huaweicloud.com/competition/information/1300000124/circumstance)并可以在[Versatile](https://developer.huaweicloud.com/competition/information/1300000124/circumstance)使用自定义的agent。
-
++ DeepSeek:
+  + [DeepSeek-v2](https://arxiv.org/abs/2405.04434)
+  + [DeepSeek-v3](https://arxiv.org/abs/2412.19437)
 ## 大语言模型 中文版
 + 大语言模型的演化：统计学习语言模型（n-gram）、神经网络语言模型（word2vec使用无标注文本学习词嵌入表示）、预训练语言模型（ELMo、BERT、GPT-1 预训练-微调模式）、大语言模型（Scaling Law等） 
   + Scaling Law 
