@@ -268,6 +268,9 @@ export default defineUserConfig({
 		  'Sign',
 		  'DrivingLicense',
 	  ],
+	  '/Job/': [
+		  '',
+	  ],
 	   '/': [
             '',
           ],
