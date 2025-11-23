@@ -43,7 +43,7 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 url: http://localhost:8000
 tunnel: 0010ec29-2b77-4207-977e-1f2e04f5e5c4
 ```
-+ 根据网站上带有token的命令手动启动进程，国内运营商似乎会禁用udp的流量，所以[默认的`quic`协议会不工作](https://www.huluohu.com/posts/514/)，因此需要加上`--protocol auto`
++ 根据网站上带有token的命令手动启动进程，国内运营商似乎会禁用udp的流量，所以[默认的`quic`协议会不工作](https://www.huluohu.com/posts/514/)，因此需要加上`--protocol auto`（实测仍然不行）或者用`--protocal http2`，token的值可以在`cloudflare`的`ZeroTrust-Network`里找到。
 ```shell
  cloudflared tunnel --protocol auto run --token <你的token>
 ```
