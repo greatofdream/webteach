@@ -1,11 +1,12 @@
 # Verilator
-[Verilator](https://verilator.org/guide/latest/overview.html) 是一个FPGA仿真器.
-+ 下面用NJU的教程作业作为示例展示我设计的Verilator的项目结构构建，作业完整代码见[仓库](https://gitcode.net/verilog/njuexperiment)
-+ [一生一芯的代码仓库](https://gitcode.net/verilog/ysyx.git)
-
+[Verilator](https://verilator.org/guide/latest/overview.html) 是一个FPGA仿真器，archlinux发行版有比较新的版本，可以通过包管理器直接安装。如果从源码编译安装，需要根据教程在`.bashrc`中加入环境变量`VERILATOR_ROOT`
++ 下面用NJU的教程作业作为示例展示我设计的Verilator的项目结构构建，NJU作业完整代码见[仓库](https://gitcode.net/verilog/njuexperiment)
++ PA教程[一生一芯的代码仓库](https://gitcode.net/verilog/ysyx.git)
++ [Verilator trace](https://verilator.org/guide/latest/faq.html#how-do-i-generate-waveforms-traces-in-c)可以在命令行指定，也可以在cpp文件中精细的设置。FST和VCD不能同时被支持。看起来新版本已经[不建议`--trace`](https://verilator.org/guide/latest/exe_verilator.html#cmdoption-trace)，该参数默认等效是`--trace-vcd`
 其他教程
 + [Verilator Pt](https://www.itsembedded.com/dhd/verilator_1/)
-## 项目结构
+
+## NJU作业项目结构
 + 多个项目共用同一个简单的父Makefile，每个项目创建新的Makefile并inlude父Makefile,简化重复的代码。其中指定里`top-module`是一个变量，需要在每个项目中指定。
 ```makefile
 .PHONY: top
@@ -22,6 +23,7 @@ decode24: TOPMODULE=decode24
 decode24: top
 ```
 + `TOPMODULE.cpp`:verilator的模拟的入口文件，需要在里面控制时钟周期`contextp->timeInc(1);`
+
 ## ALU实现
 + 有符号数相减时，对于被减数B可以取反加1,变成相加运算
 ```verilog
@@ -38,6 +40,10 @@ assign Overflow = (A[n-1] == t_no_Cin[n-1]) && (Result [n-1] != A[n-1]);
 + carry进位使用`assign { Carry, Result } = A + t_no_Cin + Cin`这种方式，对于减法来说，使用的不是`borrow flag`，比如`3-0`计算后，由于略去了补码计算过程，直接将反码`t_no_Cin`加上，导致carry会是1。所以可以先计算补码，修改硬件实现获得`borrow flag`的方式。
 + 在ICS课程中介绍的X86处理器中，减法的进位是以借位方式实现的。[wikipedia有详细的讲述](https://en.wikipedia.org/wiki/Carry_flag)
 + 在作业仓库里的实现有问题，虽然Testbench通过，但是接入板子后会出现sel的信号无法实时让alu模块计算，会慢一个周期，看起来不能在always块里调用外部模块的输出
+
+## 键盘
++ `ps2_clk_syn`使用3位而不是2位：使用同步信号处理异步信号，由于建立时间的问题，第一级触发器可能处于亚稳态，输出完全不可预测，延迟一个周期恢复。
++ `timescale 1ns/1ps`在verilator仿真时按照1ps进行`timeInc(1)`，但是单位却被记录为`1s`
 
 ## 综合
 +
