@@ -1,4 +1,6 @@
 # Windows
++ [使用windows10升级助手对windows10内部版本升级](https://support.microsoft.com/zh-cn/topic/windows-10-%E6%9B%B4%E6%96%B0%E5%8A%A9%E6%89%8B-3550dfb2-a015-7765-12ea-fba2ac36fb3f)
++ [windows版本号和对应的最新内部版本](https://learn.microsoft.com/zh-cn/windows/release-health/release-information)
 ## 激活
 [这里](https://massgrave.dev/kms38.html)提供了一个欺骗windows的方式来获取直到2038年的激活方式，命令如下
 ```shell
@@ -37,3 +39,4 @@ Windows编程遇到的一些有趣的样例
 ## WSL
 + [systemd](https://github.com/microsoft/WSL/issues/10397)需要使用里面的命令修复，否则`Failed to take /etc/passwd lock: Invalid argument`
 + [WSL使用usb](https://learn.microsoft.com/zh-cn/windows/wsl/connect-usb)
++ [wsl的gui要求](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/gui-apps): 需要位于 Windows 10 内部版本 `19044+` 或 Windows 11 
