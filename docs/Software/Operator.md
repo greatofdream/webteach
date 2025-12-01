@@ -4,7 +4,7 @@
 + [文档](https://www.hiascend.com/document)
 + [认证](https://www.hiascend.com/edu/certification)
 + [文档Ascend C环境准备](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/83RC1alpha002/opdevg/Ascendcopdevg/atlas_ascendc_10_0002.html)。白嫖了华为云的云主机，180h，应该够用了。云主机系统为ubuntu24，python版本3.12，结果cann-toolkit8.2rc竟然不支持python3.12，无语，最后在文档中发现他们标注了python版本支持，也不高亮提醒。
-  + `ModelArt`中的`Colab`提供GPU的`Notebook`每天可白嫖2小时的算力，且已安装`910B4`芯片，但是不能保存数据。
+  + `ModelArt`中的`AI Colab`(不是默认的Colab)提供GPU的`Notebook`每天可白嫖2小时的算力，且已安装`910B4`芯片，但是不能保存数据。
 ```shell
 # 选择包管理器安装依赖
 apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
@@ -13,6 +13,9 @@ apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
 + `run.sh`在`runmode`是`cpu`或`sim`时会额外设置，此外所有模式均会编译出`ascendc_kernels_bbit`，在`npu`模式下会运行`msprof op --application=./ascendc_kernels_bbit`，最终会对比结果正确性。
   + `bash run.sh -r npu -v Ascend910B4`
 + 示例程序`git clone https://gitee.com/ascend/samples.git`
++ AscendC编译时，我发现似乎它的编译器不支持`//`这个运算符。
++ [UB的内存解释](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/ascendcbestP/atlas_ascendc_best_practices_10_0025.html)有助于理解中间结果的操作。
+
 ### 抽象硬件架构
 + AI Core中包含计算单元、存储单元、搬运单元等核心组件
   + 计算单元包括了三种基础计算资源：Cube计算单元、Vector计算单元和Scalar计算单元
@@ -144,8 +147,16 @@ TBE（Tensor Boost Engine）负责执行昇腾AI处理器中运行在AI Core上�
 
 ## 昇腾算子开发比赛
 [比赛页面](https://developer.huaweicloud.cn/competition/information/1300000204/html3)
-+ `Matmul`样例位于`10matmul_frameworklaunch`
-+ 华为的OS运行`install.sh`会报错`The path MatmulCustom.json should not be written by user group or others, which will cause security risk`，需要手动`chmod`取消`group`的写权限，看起来是华为提供的OS的奇怪问题。后续编译会遇到找不到`sys_version`的问题。
-+ 华为的AI Notebook运行找不到`register/tiling_data_base.h`，但是路径在`CustomOp/cmake/func.cmake`已经包含了`-I ${ASCEND_CANN_PACKAGE_PATH}/include`
++ Matmul 优化
+  + `Matmul`样例位于`10matmul_frameworklaunch`，说明书提供的建议`XMatMul`不知道是个什么东西
+  + 华为的OS运行`install.sh`会报错`The path MatmulCustom.json should not be written by user group or others, which will cause security risk`，需要手动`chmod`取消`group`的写权限，看起来是华为提供的OS的奇怪问题。后续编译会遇到找不到`sys_version`的问题。
+  + 华为的AI Notebook运行找不到`register/tiling_data_base.h`，但是路径在`CustomOp/cmake/func.cmake`已经包含了`-I ${ASCEND_CANN_PACKAGE_PATH}/include`，发现需要设置`CANN_PACKAGE_PATH`
+    + `op_tmpl.py`定义`CMAKE_CPP_CONFIG`赋值上述变量
+    + `op_gen/interface/op_file_aicore.py:        utils.write_files(cfg_file, OPTmpl.CMAKE_CPP_CONFIG.format(soc_ver=soc, plugin=plugin))`
+    + 最终产生`./cmake/config.cmake`
+    + 看起来是因为`/usr/local/Ascend/ascend-toolkit/8.0.RC3/tools/msopgen/template/operator_demo_projects/ascendc_operator_sample/CMakePresets.json`直接拷贝的原因导致的错误，不知道为何原文件是错误的变量值。
++ MatmulLeak优化
+  + 
+
 
 
