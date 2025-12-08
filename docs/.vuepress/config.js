@@ -4,6 +4,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 import { getDirname, path } from '@vuepress/utils'
 import { markdownMathPlugin } from '@vuepress/plugin-markdown-math'
 import { seoPlugin } from '@vuepress/plugin-seo'
+import { sitemapPlugin } from '@vuepress/plugin-sitemap'
 
 const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
@@ -291,6 +292,10 @@ export default defineUserConfig({
       // 选项
       }),
       seoPlugin({
+      // 选项
+        hostname: "lovestrong.top"
+      }),
+      sitemapPlugin({
       // 选项
         hostname: "lovestrong.top"
       }),
