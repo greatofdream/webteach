@@ -3,6 +3,8 @@ import { defineUserConfig } from 'vuepress'
 import { defaultTheme } from '@vuepress/theme-default'
 import { getDirname, path } from '@vuepress/utils'
 import { markdownMathPlugin } from '@vuepress/plugin-markdown-math'
+import { seoPlugin } from '@vuepress/plugin-seo'
+
 const __dirname = getDirname(import.meta.url)
 //import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
@@ -10,7 +12,7 @@ export default defineUserConfig({
   bundler: viteBundler({
     viteOptions: {
       server: {
-        allowedHosts: ['web.lovestrong.top'],
+        allowedHosts: ['web.lovestrong.top', '*.lovestrong.top'],
       },
     },
     vuePluginOptions: {},
@@ -288,5 +290,19 @@ export default defineUserConfig({
       markdownMathPlugin({
       // 选项
       }),
+      seoPlugin({
+      // 选项
+        hostname: "lovestrong.top"
+      }),
+  ],
+  head: [
+    [
+      "script",
+      {
+        async: "async",
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8425196197073001",
+	crossorigin: "anonymous"
+      }
+    ]
   ],
 })
