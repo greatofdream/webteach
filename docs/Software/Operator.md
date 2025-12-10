@@ -5,6 +5,7 @@
 + [认证](https://www.hiascend.com/edu/certification)，[这里](https://www.hiascend.com/profile/growth/equity)可以白嫖认证券
 + [文档Ascend C环境准备](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/83RC1alpha002/opdevg/Ascendcopdevg/atlas_ascendc_10_0002.html)。白嫖了华为云的云主机，180h，应该够用了。云主机系统为ubuntu24，python版本3.12，结果cann-toolkit8.2rc竟然不支持python3.12，无语，最后在文档中发现他们标注了python版本支持，也不高亮提醒。
   + `ModelArt`中的`AI Colab`(不是默认的Colab)提供GPU的`Notebook`每天可白嫖2小时的算力，且已安装`910B4`芯片，但是不能保存数据。
+  + 测试发现AI Notebook由于权限问题（`CANN`看起来只支持安装者使用），需要自行安装CANN才能编译算子及开发，否则只能运行推理和训练任务。
 ```shell
 # 选择包管理器安装依赖
 apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
@@ -15,6 +16,7 @@ apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
 + 示例程序`git clone https://gitee.com/ascend/samples.git`
 + AscendC编译时，我发现似乎它的编译器不支持`//`这个运算符。
 + [UB的内存解释](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/ascendcbestP/atlas_ascendc_best_practices_10_0025.html)有助于理解中间结果的操作。
++ [昇腾产品](https://www.hiascend.com/document/detail/zh/AscendFAQ/ProduTech/productform/hardwaredesc_0001.html) `npu-smi info`
 
 ### 抽象硬件架构
 + AI Core中包含计算单元、存储单元、搬运单元等核心组件
@@ -145,6 +147,12 @@ apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
 ## TBE&AI CPU算子开发
 TBE（Tensor Boost Engine）负责执行昇腾AI处理器中运行在AI Core上的算子，TBE提供了基于TVM（Tensor Virtual Machine）框架的自定义算子开发能力，通过TBE提供的API可以完成相应神经网络算子的开发
 
+## Triton AscendC
+
+## TileLang AscendC
+
+## PyAsc
+
 ## 昇腾算子开发比赛
 [比赛页面](https://developer.huaweicloud.cn/competition/information/1300000204/html3)
 + Matmul 优化
@@ -156,7 +164,10 @@ TBE（Tensor Boost Engine）负责执行昇腾AI处理器中运行在AI Core上�
     + 最终产生`./cmake/config.cmake`
     + 看起来是因为`/usr/local/Ascend/ascend-toolkit/8.0.RC3/tools/msopgen/template/operator_demo_projects/ascendc_operator_sample/CMakePresets.json`直接拷贝的原因导致的错误，不知道为何原文件是错误的变量值。
 + MatmulLeak优化
-  + 在Acl调用时会[报workspace初始化出问题](https://www.hiascend.com/forum/thread-0278200031133602130-1-1.html)，原因未知。[类似报错说是卡类型不支持](https://gitee.com/ascend/samples/issues/IA5M55)。[错误码](https://www.hiascend.com/doc_center/source/zh/canncommercial/63RC2/inferapplicationdev/aclcppdevg/aclcppdevg_03_0380.html)。搞了一周没跑通流程，令人费解。
+  + 在Acl调用时会[报workspace初始化出问题](https://www.hiascend.com/forum/thread-0278200031133602130-1-1.html)，原因未知。[类似报错说是卡类型不支持](https://gitee.com/ascend/samples/issues/IA5M55)。[错误码](https://www.hiascend.com/doc_center/source/zh/canncommercial/63RC2/inferapplicationdev/aclcppdevg/aclcppdevg_03_0380.html)。搞了一周没跑通流程，令人费解。提了工单，最后支持团队告诉我是因为由于AI Notebook没有权限访问`opp/vendors`下面的内容，导致编译没有完成。
+  + [workspace使用](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/Ascendcopdevg/atlas_ascendc_10_0056.html)
+  + [AddConfig注册](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/Ascendcopdevg/atlas_ascendc_10_0062.html)
+  + [微信群里提供的`FatRelu_mal`例子](https://gitcode.com/cann/ops-nn/blob/master/activation/fatrelu_mul/)
 
 
 
