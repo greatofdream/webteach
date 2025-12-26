@@ -5,7 +5,18 @@
 + [认证](https://www.hiascend.com/edu/certification)，[这里](https://www.hiascend.com/profile/growth/equity)可以白嫖认证券
 + [文档Ascend C环境准备](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/83RC1alpha002/opdevg/Ascendcopdevg/atlas_ascendc_10_0002.html)。白嫖了华为云的云主机，180h，应该够用了。云主机系统为ubuntu24，python版本3.12，结果cann-toolkit8.2rc竟然不支持python3.12，无语，最后在文档中发现他们标注了python版本支持，也不高亮提醒。
   + `ModelArt`中的`AI Colab`(不是默认的Colab)提供GPU的`Notebook`每天可白嫖2小时的算力，且已安装`910B4`芯片，但是不能保存数据。
-  + 测试发现AI Notebook由于权限问题（`CANN`看起来只支持安装者使用），需要自行安装CANN才能编译算子及开发，否则只能运行推理和训练任务。
+  + 测试发现AI Notebook由于权限问题（`CANN`看起来只支持安装者使用），需要自行安装CANN才能编译算子及开发，否则只能运行推理和训练任务。因为AI Notebook中包含了依赖，所以直接安装toolkit即可
+```bash
+curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" -e "https://www.hiascend.com/" -o Ascend-cann-kernels-910b_8.1.RC1_linux-aarch64.run "https://ascend-repo.obs.cn-east-2.myhuaweicloud.com/CANN/CANN%208.1.RC1/Ascend-cann-kernels-910b_8.1.RC1_linux-aarch64.run"
+
+curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" -e "https://www.hiascend.com/" -o Ascend-cann-nnal_8.1.RC1_linux-aarch64.run "https://ascend-repo.obs.cn-east-2.myhuaweicloud.com/CANN/CANN%208.1.RC1/Ascend-cann-nnal_8.1.RC1_linux-aarch64.run"
+
+curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" -e "https://www.hiascend.com/" -o Ascend-cann-toolkit_8.1.RC1_linux-aarch64.run "https://ascend-repo.obs.cn-east-2.myhuaweicloud.com/CANN/CANN%208.1.RC1/Ascend-cann-toolkit_8.1.RC1_linux-aarch64.run"
+
+bash Ascend-cann-toolkit_8.1.RC1_linux-aarch64.run --install
+source ~/Ascend/ascend-toolkit/set_env.sh
+```
++ 自行安装前期所有依赖
 ```shell
 # 选择包管理器安装依赖
 apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
@@ -116,6 +127,7 @@ apt install -y gcc make net-tools cmake python3 python3-dev python3-pip
 `msopgen`的使用说明
 + 在AI notebook中使用时发现产生的`CMakePresets.json`中的`ASCEND_CANN_PACKAGE_PATH`竟然是错误的，需要[手动改正](https://bbs.huaweicloud.com/blogs/416779)，提了工单。
 + 在AI notebook安装自定义的算子，默认会装到`/usr/local`下，由于权限不够会报错
++ [单算子调用](https://www.hiascend.com/document/detail/zh/canncommercial/83RC1/opdevg/Ascendcopdevg/atlas_ascendc_10_0070.html)
 
 ### 异常检测
 `msSanitizer` 基于昇腾AI处理器的一个异常检测工具，包含了单算子开发场景下的内存检测、竞争检测、未初始化检测和同步检测四个子功能
@@ -164,7 +176,7 @@ TBE（Tensor Boost Engine）负责执行昇腾AI处理器中运行在AI Core上�
     + 最终产生`./cmake/config.cmake`
     + 看起来是因为`/usr/local/Ascend/ascend-toolkit/8.0.RC3/tools/msopgen/template/operator_demo_projects/ascendc_operator_sample/CMakePresets.json`直接拷贝的原因导致的错误，不知道为何原文件是错误的变量值。
 + MatmulLeak优化
-  + 在Acl调用时会[报workspace初始化出问题](https://www.hiascend.com/forum/thread-0278200031133602130-1-1.html)，原因未知。[类似报错说是卡类型不支持](https://gitee.com/ascend/samples/issues/IA5M55)。[错误码](https://www.hiascend.com/doc_center/source/zh/canncommercial/63RC2/inferapplicationdev/aclcppdevg/aclcppdevg_03_0380.html)。搞了一周没跑通流程，令人费解。提了工单，最后支持团队告诉我是因为由于AI Notebook没有权限访问`opp/vendors`下面的内容，导致编译没有完成。
+  + 在Acl调用时会[报workspace初始化出问题](https://www.hiascend.com/forum/thread-0278200031133602130-1-1.html)，原因未知。[类似报错说是卡类型不支持](https://gitee.com/ascend/samples/issues/IA5M55)。[错误码](https://www.hiascend.com/doc_center/source/zh/canncommercial/63RC2/inferapplicationdev/aclcppdevg/aclcppdevg_03_0380.html)。搞了一周没跑通流程，令人费解。提了工单，最后支持团队告诉我是因为由于AI Notebook没有权限访问`opp/vendors`下面的内容，导致编译没有完成。需要自行安装CANN，具体细节见上方。
   + [workspace使用](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/Ascendcopdevg/atlas_ascendc_10_0056.html)
   + [AddConfig注册](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850alpha001/opdevg/Ascendcopdevg/atlas_ascendc_10_0062.html)
   + [微信群里提供的`FatRelu_mal`例子](https://gitcode.com/cann/ops-nn/blob/master/activation/fatrelu_mul/)
