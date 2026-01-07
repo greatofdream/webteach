@@ -92,3 +92,18 @@ build/%_suc: input.txt
   + 移位：超出表示范围
   + 整数除0 `noinline`避免编译器展开函数，保持调用
 + 函数调用
+
+## D3 AM
++ AM的作用：在[课件](https://ysyx.oscc.cc/slides/2306/11.html)中的架构图显示AM位于ISA和应用（包括OS）之间
+  + klib提供架构无关的库函数，视频说是(kernel lib)，为什么不用glibc替换？
+  + AM和操作系统提供的运行时环境有什么不同呢?
++ `abstract-machine/am/src/[isa/platform/native]/[soc/simulator]/trm.c`中存有不同架构和硬件对TRM的实现接口
+  + TRM的API只提供堆区的起始和末尾, 而堆区的分配和管理需要程序自行维护. 当然, 程序也可以不使用堆区, 例如dummy
+  + `halt`调用一条内联的汇编指令：`asm volatile("mv a0, %0; ebreak" : :"r"(code));`
+    + [asm语法](http://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html)提到`%`用来引用operand，`r`代表constrains中的`register constraint`
++ 根据AM的运行时环境编译
+  + ld的链接方式：使用`-T`覆盖，`abstract-machine/scripts/linker.ld`
++ 通过AM的Makefile可以默认启动批处理模式的NEMU
+  + nemu中的`Makefile`中通过判断`CONFIG_TARGET_AM`来调用AM的Makefile，PA1中提到设置`TARGET_AM`可以产生`CONFIG_TARGET_AM`变量，这个时候nemu不会编译`init_monitor`（包含batch设置），而是编译`am_init_monitor`（不包含batch功能）
+  + 所以实际这个问题对应的是PA1直接运行程序dummy的例子，其中的Makefile引用了AM的Makefile
+  + AM的Makefile中根据`ARCH`调用`scripts/[ARCH].mk`，其中`scripts/riscv32-nemu.mk`调用`scripts/platform/nemu.mk`，并在其中定义了`run`作为target时需要执行的脚本。因此修改此处来更改运行nemu时传入参数即可，`NEMUFLAGS`中指定了log的文件名，可以增加batch的参数。
