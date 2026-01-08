@@ -47,13 +47,14 @@
   + `auipc`可以用于查看PC值
   + `jal`指令的`imm`在0位需要补0，应该是为了扩展+-区域，且`SEXT`利用位域来扩展，只需要使用一次即可
 + 更多指令：报错时从低位向高位打印
+  + `word_t`
   + `assembler pseudoinstruction` dump出的机器指令，实际对应手册的另外一个，如`sltiu`对应`seqz`
   + `word_t`在`common.h`定义为`unsigned`
   + `sltiu` sign extend 但是按照unsigned解读
   + `sltu`会用第0个寄存器`x0===0`特殊判断
   + `memory/host.h`提供了`host_write`可以被`paddr_write`调用，提供1、2、4字节选择；`host_read`返回的值是不同长度，需要扩展，
-  + `div`程序用到了chap13 M extension中的`mul`指令
-  + `mulh`实现时注意C语言从`uint32_t`到`int64_t`是无法符号扩展的，因为`int64_t`的表示范围包括了`uint32_t`，正确方式是从`uint32_t`经`int32_t`变为`int64_t`
+  + `div`程序用到了chap13 M extension中的`mul`指令，在手册的Tab.11中有包含移除和除0操作时的行为，之前没有注意，导致实现会报`FPE`错误，溢出通过扩展为64位解决，除0通过判断解决。
+  + `mulh`返回乘积的高32位，直接扩展为64位运算，可以保证不溢出，然后取出高32位返回。实现时注意C语言从`uint32_t`到`int64_t`是无法符号扩展的，因为`int64_t`的表示范围包括了`uint32_t`，正确方式是从`uint32_t`经`int32_t`变为`int64_t`
 + 自动测试
 ```Makefile
 target:=$(patsubst tests/%.c,build/%_suc,$(filter-out tests/string.c tests/hello-str.c,$(wildcard tests/*.c)))
@@ -76,7 +77,7 @@ build/%_suc: input.txt
 + RISC-V两套整数ABI `ILP32 ABI`(RV32) `LP64 ABI`(RV64)定义了变量不同长度
 + 程序的内存布局：静态数据区，堆区，栈区
 + 变量的访问
-  + 不同类型使用不同的`lw``sw`
+  + 不同类型使用不同的 `lw` `sw`
   + unsigned int 在RV64使用`lw`而不是`lwu`
 + 变量分配对齐：效率
 + RV32进行64位加法：`sltu`比较确认是否进位
@@ -107,3 +108,5 @@ build/%_suc: input.txt
   + nemu中的`Makefile`中通过判断`CONFIG_TARGET_AM`来调用AM的Makefile，PA1中提到设置`TARGET_AM`可以产生`CONFIG_TARGET_AM`变量，这个时候nemu不会编译`init_monitor`（包含batch设置），而是编译`am_init_monitor`（不包含batch功能）
   + 所以实际这个问题对应的是PA1直接运行程序dummy的例子，其中的Makefile引用了AM的Makefile
   + AM的Makefile中根据`ARCH`调用`scripts/[ARCH].mk`，其中`scripts/riscv32-nemu.mk`调用`scripts/platform/nemu.mk`，并在其中定义了`run`作为target时需要执行的脚本。因此修改此处来更改运行nemu时传入参数即可，`NEMUFLAGS`中指定了log的文件名，可以增加batch的参数。
++ 更多的测例
+  + `div`, `rem`测例均未通过
