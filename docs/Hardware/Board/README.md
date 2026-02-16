@@ -38,6 +38,12 @@ npm install cnpm -g --registry=https://registry.npmmirror.com
 + 我将Linux Deploy Pro中添加新的镜像的commit cherry-pick到`v2.5.1`分支，使其能在旧手机安卓4.4支持下的同时，可以安装更新的版本，[apk下载](https://github.com/greatofdream/Linuxdeploy-Pro/releases/tag/2.5.1)，测试了ubuntu [focal会出现dpkg错误](https://github.com/meefik/linuxdeploy/issues/1255)，，更高的版本不行，比如`jammy`依赖`zstdcat`，但是旧的安卓上没有可用的`busybox`。
 + `alphine`可以完美支持。
   + crond 的service没有安装，根据[回答](https://gitlab.alpinelinux.org/alpine/aports/-/issues/10907?__goaway_challenge=cookie&__goaway_id=31ba68cdc8eada90780d5295cfe6c719&__goaway_referer=https%3A%2F%2Fwww.google.com%2F)中提到的内容，需要手动安装`apk add busybox-openrc`，会在`/etc/init.d/`中增加`crond`。
+  + 上述的命令整理到脚本中
+  ```shell
+  service crond restart
+  service nginx restart
+  cloudflared tunnel --protocol http2 run --token <tocken>
+  ```
 
 ## cloudflared
 `alpine`中可以引入在`/etc/apk/repositories`引入`http://dl-cdn.alpinelinux.org/alpine/edge/testing`
