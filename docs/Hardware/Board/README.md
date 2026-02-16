@@ -26,6 +26,10 @@ node -v
 # cnpm
 npm install cnpm -g --registry=https://registry.npmmirror.com
 ```
++ linux deploy会将镜像挂载在特定目录`/data/local/mnt`，可以通过`mount`查看，并可cd到对应目录
+```shell
+/dev/block/loop7 /data/local/mnt ext4 rw,seclabel,relatime,data=ordered 0 0
+```
 ## Linux Deploy Pro
 有人尝试在Linux deploy上提供后续 linux 发行版的支持，并且加入了github workflow。我[克隆了它](https://github.com/greatofdream/Linuxdeploy-Pro)，并尝试将其编译至支持安卓4.4版本，放在了`android_4`分支。
 + 我参考了原仓库在[不同分支上的diff](https://github.com/meefik/linuxdeploy/compare/2.5.1...master)
