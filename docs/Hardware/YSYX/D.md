@@ -15,6 +15,7 @@
 + YEMU如何执行一条指令：解析操作码；操作数译码；更新PC。
 
 ## D1 NEMU
++ 最新的llvm会将一些函数设为不支持，可以使用`CFLAGS_BUILD += -Wno-deprecated-declarations`临时规避错误
 + 取指
 + 译码
   + `include/cpu/decode.h`: struct `Decode`
@@ -55,7 +56,7 @@
   + `memory/host.h`提供了`host_write`可以被`paddr_write`调用，提供1、2、4字节选择；`host_read`返回的值是不同长度，需要扩展，
   + `div`程序用到了chap13 M extension中的`mul`指令，在手册的Tab.11中有包含移除和除0操作时的行为，之前没有注意，导致实现会报`FPE`错误，溢出通过扩展为64位解决，除0通过判断解决。
   + `mulh`返回乘积的高32位，直接扩展为64位运算，可以保证不溢出，然后取出高32位返回。实现时注意C语言从`uint32_t`到`int64_t`是无法符号扩展的，因为`int64_t`的表示范围包括了`uint32_t`，正确方式是从`uint32_t`经`int32_t`变为`int64_t`
-+ 自动测试
++ `am-kernels/tests/cpu-tests`中自动测试：后来我发现直接`make ARCH=riscv32-nemu run`最后就会自动统计失败和成功的例子，无需下面的手搓统计
 ```Makefile
 target:=$(patsubst tests/%.c,build/%_suc,$(filter-out tests/string.c tests/hello-str.c,$(wildcard tests/*.c)))
 .PHONY: all
@@ -68,6 +69,7 @@ build/%_suc: input.txt
 + 分支延迟槽：避免流水线停顿
 + gcc为mips32程序的生成提供了一个-fno-delayed-branch的编译选项, 让mips32程序中的延迟槽中都放置nop指令. 这样以后, 执行跳转指令之后, 接下来就可以直接执行跳转目标的指令了, 因为延迟槽中都是nop指令, 就算不执行它, 也不会影响程序的正确性.
 + 指令名对照：在手册中找到对应的指令，可以直接搜索。
+
 ## D2 程序的机器级表示
 程序如何转化为RISC-V32的指令
 + 32位常数装入：`lui`和`addi`组合，lui步长4096，由于`addi`加载时有符号扩展调整范围为`-2048,2047`，所以必须在`lui`上处理对部分区域多加1
@@ -105,8 +107,16 @@ build/%_suc: input.txt
 + 根据AM的运行时环境编译
   + ld的链接方式：使用`-T`覆盖，`abstract-machine/scripts/linker.ld`
 + 通过AM的Makefile可以默认启动批处理模式的NEMU
-  + nemu中的`Makefile`中通过判断`CONFIG_TARGET_AM`来调用AM的Makefile，PA1中提到设置`TARGET_AM`可以产生`CONFIG_TARGET_AM`变量，这个时候nemu不会编译`init_monitor`（包含batch设置），而是编译`am_init_monitor`（不包含batch功能）
-  + 所以实际这个问题对应的是PA1直接运行程序dummy的例子，其中的Makefile引用了AM的Makefile
-  + AM的Makefile中根据`ARCH`调用`scripts/[ARCH].mk`，其中`scripts/riscv32-nemu.mk`调用`scripts/platform/nemu.mk`，并在其中定义了`run`作为target时需要执行的脚本。因此修改此处来更改运行nemu时传入参数即可，`NEMUFLAGS`中指定了log的文件名，可以增加batch的参数。
-+ 更多的测例
-  + `div`, `rem`测例均未通过
+  +  nemu中的`Makefile`中通过判断`CONFIG_TARGET_AM`来判断是否将nemu编译到AM上运行，PA1中提到设置`TARGET_AM`可以产生`CONFIG_TARGET_AM`变量，这个时候nemu不会编译`init_monitor`（包含batch设置`-b`参数），而是编译`am_init_monitor`（不包含batch功能），所以在不知道这个参数的含义时，会误以为需要修改这个参数；
+  +  修改`nemu.mk`方式
+    + PA1直接运行程序dummy的例子，其中的Makefile引用了AM的Makefile
+    + AM的Makefile中根据`ARCH`调用`scripts/[ARCH].mk`，其中`scripts/riscv32-nemu.mk`调用`scripts/platform/nemu.mk`，并在其中定义了`run`作为target时需要执行的脚本。
+    + 修改`scripts/platform/nemu.mk`中`NEMUFLAGS`此处来更改运行nemu时是否传入`-b`参数即可，`NEMUFLAGS`中指定了log的文件名，可以增加batch的参数。通过引入新的`sdb` target可以通过`make ARCH=riscv32-nemu sdb`直接调用sdb的非batch模式，方便调试。
+    + 每次`make`时会自动更新`nemu`中的二进制`nemu/build/riscv32-nemu-interpreter`
++ RISC-V指令测试：
+  + `riscv-tests-am`中`div`, `rem`测例均未通过，是溢出的问题没有仔细考虑
+  + `riscv-arch-tests-am`中`fence`（未实现）和`jalr`测例未通过，
+    + `fence`在2.7 Memory Ordering Instructions中定义，`MISC-MEM=00011 11`
+    + `jalr`指令需要将最后一位置为0，2.5节中有说明，之前没有注意到
+  + [这个网站](https://cpulator.01xz.net/?sys=rv32)Memory页签里可以Load二进制，按照riscv32设置，程序地址起点是`0x80000000`；在顶部的位置`Load ELF`可以加载elf文件。
+
