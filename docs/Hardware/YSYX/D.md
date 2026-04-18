@@ -119,4 +119,8 @@ build/%_suc: input.txt
     + `fence`在2.7 Memory Ordering Instructions中定义，`MISC-MEM=00011 11`
     + `jalr`指令需要将最后一位置为0，2.5节中有说明，之前没有注意到
   + [这个网站](https://cpulator.01xz.net/?sys=rv32)Memory页签里可以Load二进制，按照riscv32设置，程序地址起点是`0x80000000`；在顶部的位置`Load ELF`可以加载elf文件。
-
++ 实现常用库函数：`abstract-machine`中有`am`和`klib`两个文件夹，分别是架构相关的AM和架构无关的库函数(类似`libc`)
+  + 字符串处理函数`abstract-machine/klib/src/string.c`
+    + `strcat` manual说可能inefficient，而且不可以overlap
++ `stdarg.h`，通过`locate`可以找到路径，在里面只定义了`__builtin_va_xxx`。包含一些获取函数调用参数的宏, 它们可以看做是调用约定中关于参数传递方式的抽象. 不同ISA的ABI规范会定义不同的函数参数传递方式。
+  + 根据不同架构，需要让指针移动不同的offset。
