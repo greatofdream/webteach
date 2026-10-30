@@ -44,6 +44,8 @@
 + 执行了未实现指令会出现报错信息: `inst.c:decode_exec`从上向下匹配，直到全`?`匹配，返回`INV`(`invalid_inst`的宏定义)，打印报错信息
 + 实现指令：
   + 调用`${AM_HOME}/Makefile`指定`ARCH`生成`Makefile.%`，根据`Makefile.%`编译运行，日志输入`.result`，最终`Makefile.%`和日志被删除
+  + `${AM_HOME}/Makefile`中的`include $(AM_HOME)/scripts/$(ARCH).mk`会加载指定ARCH的Makefile。
+  + `$(AM_HOME)/scripts/$(ARCH).mk`中会调用`isa/$(ISA).mk`和`platform/$(PLATFORM).mk`。
   + 查看反汇编结果`am-kernels/tests/cpu-tests/build/dummy-$ISA-nemu.txt` `li` `mv`指令是用`addi`指令替代的，`j`用`jal`代替
   + `auipc`可以用于查看PC值
   + `jal`指令的`imm`在0位需要补0，应该是为了扩展+-区域，且`SEXT`利用位域来扩展，只需要使用一次即可

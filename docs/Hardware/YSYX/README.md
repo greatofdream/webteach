@@ -35,7 +35,8 @@
   + `io_write`在` abstract-machine/klib/include/klib-macros.h`定义了宏，替换为`ioe_write`
   + 由于am中`init_platform`时会抛出异常，需要通过`handle SIGUSR1 nostop noprint pass`关闭该异常，否则gdb会停下。当约束水平和数值的像素点为256时，周围有黑边，原因未知。
   + 编译时需要链接库，其中`-lm`需要加入，虽然在示例Makefile中不会显示，全部的链接选项为`minirvEMU-gui: LDLIBS+= -Wl,-no-whole-archive -Wl,-z -Wl,noexecstack -lSDL2 -ldl -lm`
-+ E5: RTL(Register Transfer Level)仿真
+
+### E5: RTL(Register Transfer Level)仿真
 + 功能验证
   + [Verilator相关内容](/Hardware/Software/Verilator)，教程提供了双控开关，可以参考[这里的实现](https://gitcode.net/verilog/njuexperiment/-/blob/master/ex1/twoxor.cpp)
   + nvboard项目更新，其中`constr.h`被重命名了，而之前的编译固定生成的`component.d`没有办法更新，因此需要删除`build/*.d`文件，然后重新编译

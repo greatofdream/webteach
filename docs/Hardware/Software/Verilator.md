@@ -1,5 +1,7 @@
 # Verilator
 [Verilator](https://verilator.org/guide/latest/overview.html) 是一个FPGA仿真器，archlinux发行版有比较新的版本，可以通过包管理器直接安装。如果从源码编译安装，需要根据教程在`.bashrc`中加入环境变量`VERILATOR_ROOT`
+  + `verilator`将`Vtop`模块编译为`Vtop.h`，在里面可以找到端口的类型定义`VL_IN`和`VL_OUT`，具体参考[Verilated Models](https://verilator.org/guide/latest/connecting.html)。而连接到C++需要加入`VERILATOR_FLAGS += -cc`，可以在YSYX的nvboard项目的Makefile里找到。
+  + [Direct Programming Interface](https://verilator.org/guide/latest/connecting.html#direct-programming-interface-dpi) (DPI) 直接编程接口：Verilator支持 System Verilog的DPI倒入和导出的语句
 + 下面用NJU的教程作业作为示例展示我设计的Verilator的项目结构构建，NJU作业完整代码见[仓库](https://gitcode.net/verilog/njuexperiment)
 + PA教程[一生一芯的代码仓库](https://gitcode.net/verilog/ysyx.git)
 + [Verilator trace](https://verilator.org/guide/latest/faq.html#how-do-i-generate-waveforms-traces-in-c)可以在命令行指定，也可以在cpp文件中精细的设置。FST和VCD不能同时被支持。看起来新版本已经[不建议`--trace`](https://verilator.org/guide/latest/exe_verilator.html#cmdoption-trace)，该参数默认等效是`--trace-vcd`
