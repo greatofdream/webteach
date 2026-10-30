@@ -20,7 +20,7 @@ export default defineUserConfig({
   }),
   title: '量子数据分析云',
   description: 'DWF',
-  base: '/',
+  base: process.env.VUEPRESS_BASE || '/',
   record: "京ICP备2020037097号-1",
   year: "2023/01/14",
   theme: defaultTheme({
